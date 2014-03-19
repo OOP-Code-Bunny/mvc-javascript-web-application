@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+</head>
+<body>
+<script type="text/javascript">
+   var PubSub = {
+       sub:function(event,callback){
+           this._callbacks = this._callbacks || {};
+           this._callbacks[event] = this._callbacks[event] || [];
+           this._callbacks[event].push(callback);
+           return this
+       },
+       pub:function(){
+           var args = Array.prototype.slice.call(arguments,0);
+           var event = args.shift();
+             if(this._callbacks && this._callbacks[event]){
+               var eventList = this._callbacks[event];
+               for(var i=0;i<eventList.length;i++){
+                   eventList[i].apply(this,args);
+               }
+             }
+           return this
+       }
+   };
+   PubSub.sub('user.name',function(arg){
+       console.log(arg)
+   });
+   PubSub.sub('user.name',function(arg){
+       document.write(arg+'<br/>')
+   });
+   PubSub.sub('user.job',function(arg){
+       document.write(arg+'<br/>')
+   });
+   PubSub.pub('user.name','jyh');
+   PubSub.pub('user.job','web-front-end');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+    var Class = function(name){
+        this.name = name;
+        //this.init.apply(this,arguments);
+    };
+    Class.init = function(){console.log(this)};
+
+    console.log(Class.init);     //得到正确的结果
+    console.log(Class.prototype.init);  //得到的结果是undefined
+
+    var person = new Class('person');
+    //person.init = Class.init;
+    console.log(person);         //person实例并没有继承Class的类的方法
+    console.log(person.init);    //person实例并没有继承Class的类的方法
+    console.log(person.prototype.init);   //person实例当然没有原型的init方法
+
+//    总结: 1.类的方法,其实就是实例的方法,就是把类当成一个对象时,它私有的方法,实例化以后,是不会被继承的,只能像21行那样再写一遍
+</script>
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+    var Class = function(name){
+        this.name = name;
+        this.init = function(){console.log(this)};
+        this.init.apply(this,arguments);
+    };
+
+    console.log(Class.init);     //得到的结果是undefined,因为它是对象的方法,而不是Class类的方法
+    console.log(Class.prototype.init);  //得到的结果是undefined
+
+    var person = new Class('person');
+    console.log(person.init);    //由于person是Class的实例,所以,person.init就是Class里this.init
+    console.log(person.prototype.init);   //person实例当然没有原型的init方法
+
+//    总结: 1.对象的方法,在定义类的时候使用this.init来定义,当类不实例化的时候,此方法不属于任何对象
+//    实例化以后, this就指向当前的实例对象,成为该对象的一个方法
+//    2.和原型就没有什么关系了
+//    3.通过这种方式定义的方法,不能够先调用再定义,比如13和14行,不能对换
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LAB.js</title>
+    <meta charset="utf-8">
+    <script src="LAB.js"></script>
+    <!--
+    书上和网上都说它是并行加载js的,但是没有办法证明这一点,测试的时候发现就是写在前面的先执行.如果以后遇到不对的时候,知道有个wait()方法可以延迟后面文件的加载执行就行了.
+    -->
+    <script type="text/javascript">
+      $LAB
+      .script('../../jquery-1.7.1.min.js').wait()
+      .script('./lib/script_1.js')
+      .script('./lib/script_2.js')
+      .script('./lib/script_3.js')
+      .script('./lib/script_4.js')
+    </script>
+</head>
+<body>
+<div class="el" style="display:block;width:300px;height:300px;background:#cae2fd"></div>
+</body>
+</html>

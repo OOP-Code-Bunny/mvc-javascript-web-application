@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>渲染模式</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.model.ajax.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.model.local.js"></script>
+    <script type="text/javascript" charset="utf-8" src="arttemplate/build/template.js"></script>
+    <style type="text/css">
+      p {
+        font-family: 'MICROSOFT YAHEI'; color:#ccc; font-size:12px
+      }
+      p span {
+        color:#00b78e
+      }
+      p.title {
+        font-size:14px; color:#00b78e
+      }
+    </style>
+  </head>
+  <body>
+    <div id="myform">
+    </div>
+
+  </body>
+  <script type="text/javascript">
+  var Task = Spine.Model.setup('renwu',['name','thing']);
+  var newTask1 = Task.create({
+    name:'bunny',
+    thing:'eating'
+  });
+
+  var newTask2 = Task.create({
+    name:'cat',
+    thing:'walking'
+  });
+
+  $(function(){
+    var Tasks = Spine.Controller.create({
+      init: function(){
+        this.render();
+      },
+      modules: function(module){
+        return (template('tmpl-loading',module))
+      },
+      render: function(){
+        console.log(Task.all());
+        this.el.html(this.modules(Task.all()))
+      }
+    });
+    var tasks = Tasks.init({el:'#myform'})
+  });
+
+
+
+  /* Task模型用于放置数据,这里创建了两条数据
+  * Tasks模型用于创建控制器
+  * 实例化Tasks创建控制器,传入#myform作为el属性
+  * 将Task中的数据通过模板引擎渲染出html内容,并插入#myform元素中
+  * */
+
+   </script>
+</html>
+
+

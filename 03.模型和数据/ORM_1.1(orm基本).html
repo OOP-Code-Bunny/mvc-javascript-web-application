@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+</head>
+<body>
+
+<script type="text/javascript">
+var Model = {
+    name: 'Model',
+    inherited: function(){console.log('inherited函数内容')},
+    created: function(){console.log('created函数内容')},
+    prototype:{
+        init:function(){
+            console.log(arguments[0])
+        }
+    },
+    create:function(){
+        var obj = Object.create(this);
+        obj.parent = this;
+        return obj;
+    },
+    createProto:function(){
+        var obj = Object.create(this.prototype);
+        obj.parent = this;
+        return obj;
+    }
+};
+//通过Model创建一个对象
+var model = Model.create();
+model.inherited();
+model.created();
+model.prototype.init(model);
+//通过Model创建它的实例对象
+var modelProto = Model.createProto();
+modelProto.init(modelProto);
+</script>
+
+</body>
+</html>

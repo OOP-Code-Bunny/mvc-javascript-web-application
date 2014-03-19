@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+var Class = function(){
+    var klass = function(){
+        this.init.apply(this,arguments)
+    };
+    //这句话也可以定义在第24行.
+    klass.prototype.init = function(){console.log(this)};
+
+    //定义了klass.fn = klass.prototype以后,这两者就是完全等价同步的,以后再给klass,prototype添加方法,
+    //klass.fn里也会有这个方法,以后再给klass.fn添加方法,klass.prototype里也会有这个方法
+    //因此,这与定义别名的时间是没有关系的,任何时间定义别名,他们都是完全等价的
+    klass.fn = klass.prototype;
+    klass.fn.parent = klass;     /*不知道为什么要这样定义*/
+
+    //klass.fn.init = function(){console.log(this)};
+
+    klass.extend = function(obj){
+        for(i in obj){
+            klass[i] = obj[i];
+        }
+        if(obj.entended) {
+            obj.entended(klass)
+        }
+    };
+
+    klass.include = function(obj){
+        for(i in obj){
+            klass.fn[i] = obj[i];
+        }
+        if(obj.included) {
+            obj.included(klass)
+        }
+    };
+
+    return klass;
+};
+
+//两个构造函数都是由Class类库创建而来
+var Tutu = new Class;
+var Zhouzhou = new Class;
+//一个需要被添加的方法的json对象
+var addObj = {
+    love: function(obj){alert('I love '+obj)},
+    study: function(){alert('I like study')}
+};
+//让多个构造函数共享一个对象的方法
+Tutu.include(addObj);
+Zhouzhou.include(addObj);
+//分别创建实例
+var me = new Tutu;
+var he = new Zhouzhou;
+//可以看到,实例都继承了构造函数新添加的方法(即addObj的方法)
+me.love('zhouzhou');
+he.love('tutu');
+
+</script>
+
+</body>
+</html>

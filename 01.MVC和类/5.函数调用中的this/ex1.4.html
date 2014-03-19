@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>委托</title>
+    <meta charset="utf-8">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+</head>
+<body>
+<!--委托-->
+<!--把App.log方法委托给console.log,通过apply来改变参数-->
+<!--这个例子里,委托改变的是方法,其它情况,也可能委托改变this指向-->
+<script type="text/javascript">
+    var App = {
+       log: function(){
+           var args = jQuery.makeArray(arguments);
+           args.unshift('(App)');
+           console.log.apply(console, args)
+       }
+    };
+    App.log(1,2,3);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+
+    (function($){
+        var mod = {};
+        mod.load = function(func){
+            $($.proxy(func,this))
+        };
+        mod.load(function(e){
+            this.view = $('.view');
+        });
+        mod.assetClick = function(){
+            console.log(this)
+        };
+        mod.load(function(){
+            this.view.find('.asset').click(
+                $.proxy(this.assetClick,this)
+            )
+        })
+    })(jQuery)
+
+
+</script>
+
+<div class="view">
+    <input type="button" value="asset" class="asset"/>
+</div>
+
+</body>
+</html>

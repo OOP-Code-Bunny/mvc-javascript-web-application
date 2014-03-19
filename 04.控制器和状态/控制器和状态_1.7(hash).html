@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <script src="../jquery-1.7.1.min.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+  //设置hash值,不需要#
+  window.location.hash="foo";
+  //但是获取到的hash值是有#的
+  console.log(window.location.hash==="#foo");
+
+  //将获取到的hash第一个#符号去掉
+  var hash=window.location.hash.slice(1);
+  console.log(hash==="foo");
+
+//添加hashchange事件,注意,如果是手动输入更改hash,要刷新才会触发
+window.addEventListener("hashchange",function(){
+  var hashValue = location.hash.slice(1);
+  console.log('hash变为'+hashValue)
+},false);
+
+var t=setTimeout(function(){
+  window.location.hash="newFoo"
+},2000)
+
+
+
+</script>
+
+</body>
+</html>

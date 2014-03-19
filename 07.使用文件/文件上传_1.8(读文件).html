@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <style type="text/css">
+      *{
+        font-size:12px;
+        margin:0;
+        padding:0;
+      }
+
+      textarea{
+          border:1px solid #46b8da; color:#46b8da
+      }
+
+      span{
+          color:#aaa; line-height:20px
+      }
+
+      ul {
+        margin-top:20px
+      }
+
+      li {
+        float:left; list-style:none; margin-right:16px
+      }
+
+      li img {
+        width:50px; height:50px; border:1px solid #dddddd; padding:1px
+      }
+
+      li span {
+        display:block; text-align:center; line-height:20px; width:50px; overflow:hidden; text-overflow: ellipsis
+      }
+  </style>
+  <script src="../jquery-1.7.1.min.js"></script>
+  <script type="text/javascript">
+    $(function(){
+      $("#fileInput").change(function(){
+        //获取上传的文件列表
+        var files = this.files;
+        //判断是否为图片的正则
+        var reg = new RegExp(/image.*/);
+        //循环文件列表
+        $.each(files,function(){
+          //判断文件是否过大,是否是图片
+          if((this.size<50000000) && reg.test(this.type)){
+            //reader.onload是一个回调,使用this无法访问到当前文件
+            var file = this;
+            //创建FileReader实例
+            var reader = new FileReader();
+            //以URL编码的形式返回这个文件的数据,这样就可以把它作为图片的src属性
+            reader.readAsDataURL(this);
+            //当数据可用时调用
+            reader.onload = function(e){
+              //e.target就是FileReader;
+              //e.target.result以之前设定的格式读取数据
+              var data = e.target.result;
+              var newLi = $('<li>');
+              var newImg = $('<img>');
+              //这个数据可以作为图片的src属性
+              newImg.attr('src',data);
+              var newSpan = $('<span>');
+              //获取图片的名字
+              newSpan.text(file.name);
+              newLi.append(newImg);
+              newLi.append(newSpan);
+              $('ul').append(newLi);
+            };
+          }
+        });
+      });
+    })
+  </script>
+</head>
+<body>
+<input type="file" value="" id="fileInput" multiple/>
+<br/>
+<ul></ul>
+</body>
+</html>

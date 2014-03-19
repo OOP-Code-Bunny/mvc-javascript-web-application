@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+</head>
+<body>
+<script src="../jquery-1.7.1.min.js"></script>
+<script type="text/javascript">
+
+Math.guid = function(){
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){
+        var r = Math.random()*16|0, v= c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+    }).toUpperCase();
+};
+
+var Model = {
+    name: 'Model',
+    extend: function(obj){
+        for(var i in obj){
+            this[i] = obj[i];
+        }
+        if(obj.extended){
+            obj.extented();
+        }
+    },
+    include: function(obj){
+        for(var i in obj){
+            this.prototype[i] = obj[i];
+        }
+        if(obj.included){
+            obj.included();
+        }
+    },
+    inherited: function(){console.log('inherited函数内容')},
+    created: function(){
+        this.records={};
+				this.attribute=[];
+    },
+    prototype:{
+        init:function(){
+            //用于创建实例对象的时候,继承想要继承的对象
+            //后面会用include重写
+        }
+    },
+    create:function(){
+        var obj = Object.create(this);
+        obj.created();
+        obj.parent = this;
+        return obj;
+    },
+    createProto:function(){
+        var obj = Object.create(this.prototype);
+        obj.parent = this;
+        obj.init.apply(obj,arguments);
+        return obj;
+    }
+};
+
+var model = Model.create();
+model.inherited();
+model.prototype.init(model);
+
+var modelProto = Model.createProto();   //undefined
+modelProto.init(modelProto);
+
+Model.include({
+    init:function(obj){
+        this.load(obj);
+    },
+    load:function(obj){
+        for(var i in obj){
+            this[i]=obj[i];
+        }
+    }
+});
+
+Model.extend({
+    records:{},                  //模型的records用于存放通过该模型创建的实例
+    find:function(id){           //find函数,通过id寻找通过该模型创建的,指定id的实例
+        if(this.records[id]){
+            return this.records[id].copy();
+        }
+        else{
+            try{
+                throw('Unknown record');
+            }
+            catch(err){
+                console.log(err);
+            }
+        }
+    }
+});
+
+Model.include({
+    newRecord:true,                          //每个通过Model创建的实例都有一个newRecord属性,用于记录该实例是否被记录到父模型中
+    create:function(){                       //创建记录
+        if(!this.id) this.id=Math.guid();    //创建的时候就给对象添加随机id,不需要手动添加id
+        this.newRecord=false;                //创建过记录的实例的newRecord属性变为false
+        this.parent.records[this.id]=this.copy();   //将对象的副本记录到父模型的records属性中
+    },
+    destroy:function(){                      //销毁记录
+        delete this.parent.records[this.id]; //将对象已经记录到父模型的records属性中的相应记录删除
+    },
+    update:function(){                       //更新记录
+        this.parent.records[this.id]=this.copy();
+    },
+    save:function(){                         //创建或更新记录
+        this.newRecord? this.create() : this.update();    //如果已经被记录,则更新,如果没有被记录过,则记录
+    },
+    copy:function(){                         //创建copy函数,返回一个对象的副本
+        return jQuery.extend(true,{},this);
+    }
+});
+
+//给Model添加原型的atribute方法和toJson方法
+Model.include({		
+    attribute:function(){
+        var result={};
+        var attr=this.parent.attribute;   //获取想要存储的属性,也就是父对象的attribute数组里存储着的属性
+        for(var i in attr){
+            result[attr[i]]=this[attr[i]];//把想要的属性和值存储到result对象中
+        }                                 //把id属性添加到result对象中
+        result.id = this.id;
+        return result;
+    },
+    toJSON:function(){                    //定义在序列化对象时,需要被序列化的内容
+		return this.attribute();
+    }
+});
+
+Model.extend({
+    //将records转换为数组,转换为json格式的字符串,并添加本地存储
+    saveLocal: function(name){
+        var result = [];
+        for(var i in this.records){
+            result.push(this.records[i]);
+        }
+        console.log(JSON.stringify(result));
+        //添加本地存储
+        localStorage[name] = JSON.stringify(result);
+    } ,
+    //将本地存储着的'name'数据,再转换为json格式,并加载
+    loadLocal: function(name){
+        console.log(JSON.parse(localStorage[name]));
+        //加载本地存储(暂时没有讲到popluate函数的内容,但是可以知道,它的作用就是加载本地存储的数据)
+        //this.populate(JSON.parse(localStorage[name]));
+    }
+});
+model.attribute=['name','love'];
+var model1 = model.createProto({name:'model1',love:'bunny'});
+model1.attribute();   //实际不需要这一步,仅作测试
+model1.save();
+console.log(model1.attribute());
+console.log(model.records);
+var json = JSON.stringify(model.records); 
+//records是多维的json:比如{E23ED:{id:'E23ED',name:'name1',love:'love1'},E24ED:{id:'E24ED',name:'name2',love:'love2'}}
+//在序列化的时候,子对象本身的都有toJSON方法,所以,在序列化子对象的时候,会调用每个子对象的toJSON方法,这样,就可以只序列化attribute数组中所需要的属性
+console.log(json);
+//存储包含了model1的records数据到本地
+model.saveLocal('model1');
+
+var model2 = model.createProto({name:'model2',love:'puppy'});
+model2.save();
+//存储包含了model1和model2的records数据到本地
+model.saveLocal('model1_2');
+
+//加载包含了model1的records的本地存储到页面
+model.loadLocal('model1');
+//加载包含了model1和model2的records的本地存储到页面
+model.loadLocal('model1_2');
+//注意,saveLocal()得到的是字符串,loadLocal()得到的是数组对象,数组中的每个元素,都是json对象,他们的区别参考ORM1.7.JPG
+</script>
+
+</body>
+</html>

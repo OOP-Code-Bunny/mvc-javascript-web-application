@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+</head>
+<body>
+
+<script type="text/javascript">
+//无参数,仅仅改变方法的上下文:
+var Class = function(name,job){
+    this.name = name;
+    this.job = job;
+};
+var jyh = new Class('jyh','web-front-end');
+var zxg = new Class('zxg','php');
+//给jyh实例添加私有方法:
+jyh.intro = function(){console.log(this.name)};
+//给jyh实例添加一个相同私有方法,但是使this上下文指向zxg实例:
+//注意,使用bind方法,是不执行方法的,只是改变方法里的上下文,返回一个新的方法;
+jyh.introOther = jyh.intro.bind(zxg);
+jyh.intro();           //指针指向自己
+jyh.introOther();      //指针指向zxg
+
+</script>
+
+</body>
+</html>

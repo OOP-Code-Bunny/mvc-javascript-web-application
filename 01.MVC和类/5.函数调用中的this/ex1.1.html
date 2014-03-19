@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>改变绑定的事件的方法中的this指针</title>
+    <meta charset="utf-8">
+</head>
+<body>
+<input type="button" id="button" value="button"/>
+
+<script type="text/javascript">
+//改变绑定的事件的方法中的上下文
+var clicky = {
+   clicked:function(){alert('1')},
+   addEvent:function(){
+       var that = this;
+       document.getElementById('button').onclick = function(){
+           that.clicked();
+       }
+   }
+};
+clicky.addEvent()
+</script>
+
+</body>
+</html>

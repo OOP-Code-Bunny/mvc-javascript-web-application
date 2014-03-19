@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>模型事件</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+  </head>
+  <body>
+
+  </body>
+  <script type="text/javascript">
+    var Task = Spine.Model.setup('renwu',['name','done']);
+
+    var newTask1 = Task.init({
+      name:"newTask1",
+      done:true,
+      toggle:function(){
+        this.done = !this.done
+      }
+    });
+
+    var newTask2 = Task.create({
+      name:"newTask2",
+      done:false,
+      toggle:function(){
+        this.done = !this.done
+      }
+    });
+
+    Task.bind('save',function(task){
+      console.log(task.name, 'was saved')
+    });
+
+    //newTask1.trigger('save');
+    newTask1.save();
+
+    /*为模型绑定的事件,实际是给所有的记录绑定了这一事件,传入的参数task,就是每一条记录
+    * 这里绑定了bind事件,不会影响到记录本身的save事件
+    * 自定义事件触发需要使用trigger,但是save事件还是可以使用save(),因为它本身就是spine中定义了的记录的方法
+    * 但如果这里使用trigger,那么,只会触发自己绑定的save事件,不会调用默认的save方法,不会创建id记录
+    * */
+
+   </script>
+</html>
+
+

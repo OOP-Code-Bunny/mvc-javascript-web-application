@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+
+ </head>
+ <body>
+  <script type="text/javascript">
+
+//    if (!Function.prototype.bind) {
+//      Function.prototype.bind = function (obj) {
+//        var slice = [].slice,
+//                args = slice.call(arguments, 1),
+//                self = this,
+//                nop = function () {},
+//                bound = function () {
+//                  return self.apply( this instanceof nop ? this : (obj || {}),
+//                          args.concat(slice.call(arguments)));
+//                };
+//        nop.prototype = self.prototype;
+//        bound.prototype = new nop();
+//        return bound;
+//      };
+//    }
+    if(!Function.prototype.bind){
+      Function.prototype.bind= function(obj){
+        //保存调用bind的方法
+        var self = this;
+        //保存调用bind时的参数
+        var selfArg = Array.prototype.slice.call(arguments,1);
+        //当使用new方式来调用bind后的方法,需要使用bridge来集成self的原型;
+        var bridge = function(){};
+        bridge.prototype = self.prototype;
+        //创建新的函数
+        var _self = function(){
+          //调用新函数时,将调用新函数时传入的参数和bind时的参数合并
+          var newArg = selfArg.concat(Array.prototype.slice.call(arguments));
+          //返回执行self方法,改变指针和参数
+          //如果是使用new方法调用,那么this上下文就是实例化以后的实例,而不是bind时传入的obj,这个暂时想不到有什么例子需要这样调用
+          return self.apply(this instanceof bridge? this : obj||{} , newArg)
+        };
+         _self.prototype = new bridge();
+        //返回新创建的函数
+        return _self;
+      }
+    }
+
+    var intro = function(age){
+        //arguments[arguments.length-1]可以用来访问事件对象
+        //bind方法会把执行方法时的参数放在bind时传入的参数的后面,然后一起执行,所以,事件对象作为触发事件时传入的参数,它就是最后一个参数,
+        //并且使用这种方式访问事件对象无需考虑兼容性问题
+        alert(arguments[arguments.length-1].clientX);
+        alert(this.name+','+this.job+','+age);
+    };
+
+    var jyh = {name:'jyh',job:'web-front-end'};
+    var introOther = intro.bind(jyh,18);
+
+    if(document.addEventListener){
+      document.addEventListener('mousedown',introOther);
+    }
+    else{
+      document.attachEvent('onmousedown',introOther)
+    }
+
+    //如果使用new方式来调用,那么this指针指向zxg实例
+    var zxg = new introOther();
+
+  </script>
+
+ </body>
+</html>

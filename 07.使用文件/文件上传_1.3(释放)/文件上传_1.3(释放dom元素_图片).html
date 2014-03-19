@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <style type="text/css">
+    .dragme {
+      width:100px;
+      height:100px;
+      background:#00B7FF;
+      font-family: Arial;
+      font-size:14px;
+      text-align:center;
+      line-height:100px;
+      color:#fff;
+      float:left;
+      /*设置鼠标为可拖动的样式*/
+      cursor:move
+    }
+    .dragme img{
+      width:100px;
+      height:100px
+    }
+    .dropme {
+      width:800px;
+      margin-left:30px;
+      height:100px;
+      float:left;
+      background:#cae2fd;
+      font-size:12px;
+      line-height:100px;
+      text-align:center;
+      color:#fff
+    }
+    .dropme.dropover {
+      border:1px solid #00B7FF;
+    }
+  </style>
+  <script src="../../jquery-1.7.1.min.js"></script>
+  <script src="./jquery.drop.js"></script>
+  <script type="text/javascript">
+    $(function(){
+      var dragEle=$('.dragme');
+      var bunnyImage = document.createElement('img');
+      bunnyImage.src= '../images/drag.jpg';
+      dragEle.bind('dragstart',function(e){
+        var event = e.originalEvent;
+        //这个地方设置的属性应该和下面的触发drop事件时设置的属性保持一致
+        event.dataTransfer.effectAllowed="copy";
+        event.dataTransfer.setData('image/jpeg','bunny');
+        event.dataTransfer.setData('text/html',$(this).html());
+        event.dataTransfer.setDragImage(bunnyImage,100,100);
+      });
+
+      var dropEle=$('.dropme');
+      var options = {};
+      options.drop = function(e){
+        var event = e.originalEvent;
+        var dt = event.dataTransfer;
+        /*dataTransfer对象的types属性,获取在dragstart时通过setData设置的所有属性名组成的数组*/
+        var domStringList = event.dataTransfer.types;
+        //console.log(domStringList);
+        for(var i=0;i<domStringList.length;i++){
+          /*dataTransfer对象的getData方法可以获取到在dragstart时通过setData设置的属性名的值
+           * 传入的参数就是属性名,获取相应的属性值*/
+          console.log(domStringList[i],dt.getData(domStringList[i]))
+        }
+        $(e.target).removeClass('dropover');
+        e.stopPropagation();
+        e.preventDefault();
+      };
+      dropEle.dropArea(options);
+    })
+  </script>
+</head>
+<body>
+  <div class="dragme" draggable="true"><img src="../images/drag.jpg"/></div>
+  <div class="dropme">请在此块区域释放</div>
+</body>
+</html>

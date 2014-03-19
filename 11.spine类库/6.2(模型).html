@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>模型</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+  </head>
+  <body>
+
+  </body>
+  <script type="text/javascript">
+    var Task = Spine.Model.setup('renwu',['name','done']);
+
+    var newTask1 = Task.init({
+      name:"Empty",
+      done:false,
+      toggle:function(){
+        this.done = !this.done
+      }
+    });
+    newTask1.save();
+
+    var newTask2 = Task.create({
+      name:"Empty",
+      done:false,
+      toggle:function(){
+        this.done = !this.done
+      }
+    });
+
+    console.log(newTask1.exists());
+    console.log(newTask2.exists());
+    console.log(newTask1);
+    console.log(newTask2);
+
+
+
+    /*通过save()可以给记录添加id.
+    * 如果创建记录时使用的是create(),会自动创建id.
+    * exists()检查该条记录是否有id,有的话返回true,没有的话返回undefined
+    * */
+
+   </script>
+</html>
+
+

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <style type="text/css">
+    .dragme {
+      width:300px;
+      height:300px;
+      background:#00B7FF;
+      font-family: Arial;
+      font-size:14px;
+      text-align:center;
+      line-height:300px;
+      color:#fff;
+      /*设置鼠标为可拖动的样式*/
+      cursor:move
+    }
+  </style>
+  <script src="../jquery-1.7.1.min.js"></script>
+  <script type="text/javascript">
+    $(function(){
+      var element=$('.dragme');
+      /*创建一个图片元素,拖拽的时候可以用它作为拖拽时的底图*/
+      var bunnyImage = document.createElement('img');
+      bunnyImage.src= 'images/drag.jpg';
+      //添加dragstart事件,表示拖拽开始
+      element.bind('dragstart',function(e){
+        var event = e.originalEvent;
+        event.dataTransfer.effectAllowed="move";
+        //设置text/plain属性和text/html属性,在释放拖拽时可以获取这两个数据
+        /*拖拽文本一般设置text/plain属性,拖拽元素一般设置text/html属性,拖拽链接一般设置text/plain属性或者text/uri-list属性,拖拽图片一般设置image/jpeg,image/png,image/gif...,
+        其它类型的文件参考常见MIME类型:http://wenku.baidu.com/link?url=IPiYv9NbHipfmgyL6_LGdLcORxPU__Z5xH63SY9wRPlwl_R5l57GTFeGMP5b8Otts102Sw9CH0KAruulOG_TTbKdPQv0PJa48843krL0USu
+         */
+        event.dataTransfer.setData('text/plain',$(this).text());
+        event.dataTransfer.setData('text/html',$(this).html());
+        /*设置拖拽时的底图,和鼠标相对于图片左上角的坐标*/
+        //event.dataTransfer.setDragImage(bunnyImage,-10,-10);
+        event.dataTransfer.setDragImage(bunnyImage,100,100);
+      });
+    })
+  </script>
+</head>
+<body>
+  <div class="dragme" draggable="true">Drag me!</div>
+</body>
+</html>

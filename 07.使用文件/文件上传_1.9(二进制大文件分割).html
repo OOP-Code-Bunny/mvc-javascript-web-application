@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=utf-8>
+
+  <script src="../jquery-1.7.1.min.js"></script>
+    
+  <script type="text/javascript" charset="utf-8">
+    jQuery(function($){
+      $("#fileInput").change(function(){
+                
+//        原作者这种写法无法获取
+//        var file = $(this).attr("files")[0];
+        var file = this.files[0];
+                
+        if ( !file ) return;
+        
+        console.log("Reading:", file);
+
+        /*分割时每单位的长度*/
+        var bufferSize = 120;
+        var pos = 0;
+
+        /*reader.onload时调用*/
+        var onload = function(e){
+          //第一次可以读到第一个单位量的数据
+          //第二次开始,到结束,都为空(原因不详)
+          console.log(e);
+          console.log("Read: ", e.target.result);
+        };
+        
+        var onerror = function(e){
+          console.log("Error!", e);
+        };
+
+        while (pos < file.size) {
+          var blob = file.slice(pos, bufferSize);
+
+          var reader = new FileReader();
+          reader.readAsText(blob,encoding="utf-8");
+          reader.onload  = onload;
+          reader.onerror = onerror;
+
+          pos += bufferSize;
+        }
+      });
+    })  
+  </script>
+</head>
+<body>
+  <input type="file" value="" id="fileInput">
+</body>
+</html>

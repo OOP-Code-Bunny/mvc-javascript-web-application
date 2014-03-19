@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+</head>
+<body>
+<input type="button" id="button" value="button"/>
+
+<script type="text/javascript">
+//改变方法的上下文,并且传入的参数中带有this:
+var Class = function(name){
+    this.name = name;
+};
+var jyh = new Class('jyh');
+var zxg = new Class('zxg');
+//给jyh实例添加私有方法:
+jyh.intro = function(job){console.log(job)};
+//给jyh实例添加一个相同私有方法,但是使this上下文指向zxg实例:
+//注意,bind方法,第二个参数开始,this指向决定于bind的时候,而非调用的时候,
+//如果在这里使用bind,无论在何处执行jyh.introOther,得到的结果都是 zxg,[object Window]
+jyh.introOther = jyh.intro.bind(zxg,this);
+jyh.intro('web-front-end');    //指针指向自己,传入参数
+
+var Klass = function(name){
+    this.name=name;
+    this.init();
+};
+Klass.prototype.init=function(){
+    console.log(this);
+    //如果在这里使用bind,this指向就是Klass的实例;
+    //打开注释,this指向klass,关闭注释,根据第22行定义的,this指向window
+//    jyh.introOther = jyh.intro.bind(zxg,this);
+    //和在哪里调用没有关系
+    jyh.introOther();
+};
+//将Klass实例化时,调用jyh.introOther(),this指向就是klass;
+var klass = new Klass('klass');
+
+</script>
+
+</body>
+</html>

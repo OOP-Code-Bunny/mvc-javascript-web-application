@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+</head>
+<body>
+
+<script type="text/javascript">
+var Model = {
+    name: 'Model',
+    extend: function(obj){
+        for(var i in obj){
+            this[i] = obj[i];
+        }
+        if(obj.extended){
+            obj.extented();
+        }
+    },
+    include: function(obj){
+        for(var i in obj){
+            this.prototype[i] = obj[i];
+        }
+        if(obj.included){
+            obj.included();
+        }
+    },
+    inherited: function(){console.log('inherited函数内容')},
+    created: function(){console.log('created函数内容')},
+    prototype:{
+        init:function(){
+            console.log(arguments[0])
+        }
+    },
+    create:function(){
+        var obj = Object.create(this);
+        obj.parent = this;
+        return obj;
+    },
+    createProto:function(){
+        var obj = Object.create(this.prototype);
+        obj.parent = this;
+        obj.init.apply(obj,arguments);
+        return obj;
+    }
+};
+
+//通过Model创建一个对象
+var model = Model.create();
+model.inherited();
+model.created();
+model.prototype.init(model);
+
+//通过Model创建它的实例对象
+var modelProto = Model.createProto();   //undefined
+modelProto.init(modelProto);
+
+//为Model添加方法:
+Model.extend({find:function(){
+    alert('find函数');
+    //下一篇再讲这个函数里面应该是什么
+}});
+//即使是已经创建的Model的对象,也会继承后添加的Model的方法
+model.find();
+
+//为Model添加原型方法:
+Model.include({
+    init:function(obj){
+        this.load(obj);
+    },
+    load:function(obj){
+        for(var i in obj){
+            this[i]=obj[i];
+        }
+    }
+});
+//即使是已经创建的Model的对象,也会继承后添加的Model的方法和原型的方法
+//所以这里我们用model来创建它的实例对象,和通过Model来创建它的实例对象,都可以得到想要的对象(除了parent属性指向不同)
+var newModelProto = model.createProto({name:'newModelProto'});
+console.log(newModelProto);
+
+</script>
+
+</body>
+</html>

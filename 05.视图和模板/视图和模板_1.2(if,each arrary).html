@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jquery.tmpl</title>
+    <meta charset="utf-8">
+    <script src="../jquery-1.7.1.min.js"></script>
+    <script src="./jquery.tmpl.js"></script>
+    <script src="./jquery.tmplPlus.js"></script>
+</head>
+<body>
+<!--
+循环一个数组,使用${$index}来访问数组的当前元素的索引,
+         使用${$value}来访问数组的每个值
+-->
+<script id="movieTemplate" type="text/x-jquery-tmpl">
+{{if message.length}}
+    <ul>
+        {{each message}}
+        <li>${$index+1}:<em>${$value}</em></li>
+        {{/each}}
+    </ul>
+{{else}}
+    <p>nothing!</p>
+{{/if}}
+
+</script>
+<script type="text/javascript">
+var object = {
+    message:["bunny","cat","dog"],
+    name:["xiaobao","miao","wang"]
+};
+var ele=$('#movieTemplate').tmpl(object);
+$("body").append(ele)
+</script>
+
+</body>
+</html>

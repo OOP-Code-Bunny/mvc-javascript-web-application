@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>视图和模板_1.7(模板渲染时传入数组)</title>
+    <meta charset="utf-8">
+    <script src="../jquery-1.7.1.min.js"></script>
+    <script src="./jquery.tmpl.js"></script>
+    <script src="./jquery.tmplPlus.js"></script>
+
+    <script id="movieTemplate" type="text/x-jquery-tmpl">
+        <ul>
+            <li>${name}</li>
+        </ul>
+    </script>
+    <!--当将模板渲染时传入的是参数一个数组,那么,相当于将数据中的每一个对象依次传入,多次渲染视图-->
+    <script type="text/javascript">
+        jQuery(function(){
+            obj_1={name:'bunny',love:'jyh'};
+            obj_2={name:'kitty',love:'jyh'};
+            var arr = [obj_1,obj_2];
+            var tmp = $('#movieTemplate').tmpl(arr);
+            $('body').append(tmp);
+        //相当于:
+//            var tmp_1 = $('#movieTemplate').tmpl(obj_1);
+//            $('body').append(tmp_1);
+//            var tmp_2 = $('#movieTemplate').tmpl(obj_2);
+//            $('body').append(tmp_2);
+        })
+    </script>
+</head>
+
+<body>
+</body>
+</html>

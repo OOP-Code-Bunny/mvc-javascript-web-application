@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>全局事件</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.model.ajax.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.model.local.js"></script>
+    <style type="text/css">
+      .destroy {
+        width:200px; height:200px; background:#00b78e; font-family: "MICROSOFT YAHEI"; text-align:center; line-height:200px
+      }
+    </style>
+  </head>
+  <body>
+    <div id="myform">
+      <div class="destroy" data-name="destroy"></div>
+    </div>
+
+  </body>
+  <script type="text/javascript">
+  $(function(){
+    var obj = {
+      el:'#myform'
+    };
+    window.Tasks = Spine.Controller.create({
+      proxied:['change'],
+      init:function(){
+        Spine.App.bind('change',this.change)
+      },
+      change:function(name){
+        console.log(name)
+      }
+    });
+    window.TaskNew = Spine.Controller.create({
+      events:{
+        'click div.destroy':'click'
+      },
+      click:function(e){
+        Spine.App.trigger('change',$(e.target).attr('data-name'))
+      }
+    });
+    var task1 = Tasks.init();
+    var task2 = TaskNew.init(obj);
+  });
+
+  /* Spine.App可以绑定自定义的事件,这个事件是全局的.
+  * 因此,其它控制器或者脚本,都可以触发Spine.App的事件
+  * 比如这里例子中,在task1中为Spine.App绑定事件,在task2中触发它
+  * */
+
+   </script>
+</html>
+
+

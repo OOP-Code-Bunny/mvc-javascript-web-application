@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jquery.tmpl</title>
+    <meta charset="utf-8">
+    <script src="../jquery-1.7.1.min.js"></script>
+    <script src="./jquery.tmpl.js"></script>
+    <script src="./jquery.tmplPlus.js"></script>
+
+    <!--
+    *使用this.data可以获取传入的对象本身
+    循环一个对象,使用${$index}来访问对象的当前属性名,
+             使用$value来访问对象的当前属性值,
+             使用${$value}来访问对象的当前属性值的字符串
+    *注意:在遍历中,$index和$value可以理解为获取到的一个变量,所以,要让这个变量变为字符串值,还需要再一次进行${},
+         而因为它是变量,所以,它可以进行一些操作,比如上一个例子中的$index+1,这个例子中的$value可以再次进行循环
+    -->
+    <script id="movieTemplate" type="text/x-jquery-tmpl">
+        <ul>
+            {{each this.data}}
+            <li>
+                <h4>${$index}</h4>
+                {{if $value.length}}
+                <ul>
+                    {{each $value}}
+                    <li>${$index+1}: <em>${$value}</em></li>
+                    {{/each}}
+                </ul>
+                {{else}}
+                <p>nothing!</p>
+                {{/if}}
+            </li>
+            {{/each}}
+        </ul>
+    </script>
+
+    <script type="text/javascript">
+    window.onload=function(){
+        var object = {
+            message:["bunny","cat","dog"],
+            name:["xiaobao","miao","wang"]
+        };
+        var ele=$('#movieTemplate').tmpl(object);
+        console.log(ele);
+        $("body").append(ele)
+    }
+    </script>
+</head>
+<body>
+
+</body>
+</html>

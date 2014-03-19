@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>控制器</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.model.ajax.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.model.local.js"></script>
+    <style type="text/css">
+      .destroy {
+        width:200px; height:200px; background:#00b78e; font-family: "MICROSOFT YAHEI"; text-align:center; line-height:200px
+      }
+    </style>
+  </head>
+  <body>
+
+  </body>
+  <script type="text/javascript">
+  $(function(){
+    var obj = {
+      name: 'codeBunny',
+      age: '3',
+      eat: 'milkTea'
+    };
+    window.Tasks = Spine.Controller.create({
+      init:function(){
+        this.el.addClass('destroy').html('code bunny')
+      }
+    });
+    var tasks = Tasks.init(obj);
+    console.log(tasks);
+    $('body').append(tasks.el)
+  });
+
+  /* 实例化控制器时,可以传入任意的属性*/
+
+   </script>
+</html>
+
+

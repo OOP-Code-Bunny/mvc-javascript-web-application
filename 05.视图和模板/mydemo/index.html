@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ajax,history_api实例</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="./stylesheets/bootstrap.css"/>
+    <link rel="stylesheet" href="./stylesheets/style.css"/>
+    <script src="./javascripts/jquery.js"></script>
+    <script src="./javascripts/jquery.tmpl.js"></script>
+    <script src="./javascripts/jquery.tmplPlus.js"></script>
+    <script src="./javascripts/tmpl_content.js"></script>
+    <script src="./javascripts/history.js"></script>
+    <script id="load_tmpl" type="text/x-jquery-tmpl">
+        <img src="./images/loading.gif" class="loading" alt=""/>
+    </script>
+    <script id="load_content" type="text/x-jquery-tmpl">
+        <div class="col-sm-6 col-md-4">
+            <div class="thumbnail"><img src="${url}">
+                <div class="caption">
+                    <h3>${title}</h3>
+                    <p>${content}</p>
+                    <p>
+                        <a href="#" class="btn btn-primary" role="button">Button</a>
+                        <a href="#" class="btn btn-default" role="button">Button</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </script>
+</head>
+<body>
+<div class="my_container">
+    <ul class="nav nav-tabs nav-justified">
+        <li><a rel="?title=home">Home</a></li>
+        <li><a rel="?title=Profile">Profile</a></li>
+        <li><a rel="?title=Messages">Messages</a></li>
+        <li><a rel="?title=Help">Help</a></li>
+        <li><a rel="?title=Setting">Setting</a></li>
+    </ul>
+    <div class="my_content_box">
+        <div class="row">
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

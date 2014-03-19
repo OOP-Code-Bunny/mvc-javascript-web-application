@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+</head>
+<body>
+<ul>
+
+    <li>1</li>
+
+    <li>2</li>
+
+    <li>3</li>
+
+</ul>
+<script type="text/javascript">
+    var ul= $('ul');
+    ul.delegate('li','click',function(e){
+        console.log(e);
+        console.log(this);
+    })
+</script>
+
+</body>
+</html>

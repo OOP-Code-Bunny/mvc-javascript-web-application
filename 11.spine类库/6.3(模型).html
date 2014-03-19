@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>模型</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+
+  </head>
+  <body>
+
+  </body>
+  <script type="text/javascript">
+    var Task = Spine.Model.setup('renwu',['name','done']);
+
+    var newTask1 = Task.init({
+      name:"Empty",
+      done:false,
+      toggle:function(){
+        this.done = !this.done
+      }
+    });
+    newTask1.save();
+    var id1 = newTask1.id;
+
+    var newTask2 = Task.create({
+      name:"Empty",
+      done:false,
+      toggle:function(){
+        this.done = !this.done
+      }
+    });
+    var id2 = newTask2.id;
+
+    var newTask3 = Task.init();
+
+    console.log(Task.exists(id1));
+    console.log(Task.find(id1));
+    console.log(Task.exists(id2));
+    console.log(Task.find(id2));
+    //console.log(Task.exists("70B131C6-B186-41F6-A6E6-9B185601CDF5"));
+    //console.log(Task.find("70B131C6-B186-41F6-A6E6-9B185601CDF5"));
+
+    newTask2.destroy();
+    console.log(newTask2);
+    console.log(Task.exists(id2));
+    console.log(Task.find(id2));
+
+    /*在模型上调用exists,传入一个id参数,如果此id对应的记录存在,则返回这条记录,如果不存在,返回false
+    * 在模型上调用find,传入一个id参数,如果此id对应的记录存在,则返回这条记录,如果不存在,会报错
+    * find和exists找到记录以后,会复制一个副本,而不是记录本身,所以,如果使用 === 来判断这两者是否相等,结果是false
+    * destroy方法删除一条记录
+    * 注意,和id相对应的记录,不是记录本身,而是放在本地缓存中的记录,这个记录仅包含了id和setup参数中的属性数组包含的属性
+    * */
+
+   </script>
+</html>
+
+

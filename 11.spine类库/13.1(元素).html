@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>元素</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.model.ajax.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.model.local.js"></script>
+    <style type="text/css">
+      .destroy {
+        width:200px; height:200px; background:#00b78e; font-family: "MICROSOFT YAHEI"; text-align:center; line-height:200px
+      }
+    </style>
+  </head>
+  <body>
+    <div id="myform">
+      <form action="">
+        <input type="text"/>
+      </form>
+    </div>
+
+  </body>
+  <script type="text/javascript">
+  $(function(){
+    var obj = {
+      el:'#myform'
+    };
+    window.Tasks = Spine.Controller.create({
+      elements:{
+        'form input[type=text]':'input'
+      },
+      proxied: ['init','clear'],
+      init:function(){
+        this.input.val('请输入用户名');
+        this.input.bind('focus',this.clear)
+      },
+      clear:function(){
+        this.input.val('');
+      }
+    });
+    var tasks = Tasks.init(obj);
+  });
+
+  /* 将需要用到的元素放在elements属性中
+  * 属性名是选择器,属性值是元素名
+  * 选择器选择元素的范围就是el,所以,如果更新el,需要调用refreshElements来刷新元素引用
+  * */
+
+   </script>
+</html>
+
+

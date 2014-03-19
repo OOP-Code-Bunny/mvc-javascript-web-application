@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jquery.tmpl</title>
+    <meta charset="utf-8">
+    <script src="../jquery-1.7.1.min.js"></script>
+    <script src="./jquery.tmpl.js"></script>
+    <script src="./jquery.tmplPlus.js"></script>
+    <!--模板尽可能放在最顶上,因为实际工组中模板将会include进来-->
+    <script id="movieTemplate" type="text/x-jquery-tmpl">
+        <ul>
+            {{each this.data}}
+            <li>
+                <h4>${$index}</h4>
+                {{if $value.length}}
+                <ul>
+                    {{each $value}}
+                    <li>${$index+1}: <em>${$value}</em></li>
+                    {{/each}}
+                </ul>
+                {{else}}
+                <p>nothing!</p>
+                {{/if}}
+            </li>
+            {{/each}}
+        </ul>
+    </script>
+    <script type="text/javascript">
+        //构造一个基本的模型
+        var User = function(obj){
+            //实例化以后的对象将会继承传入的参数的属性
+            jQuery.extend(this,obj)
+        };
+        //给模型添加records属性,用于记录数据
+        User.records = [];
+        //模型的bind方法,模型有_callbacks对象,对象里有名为ev的属性,ev属性的值是一个数组,数组里存放着ev相对应的事件
+        User.bind = function(ev,callback){
+            if (!this._callbacks){
+                this._callbacks = {}
+            }
+            (this._callbacks[ev] || (this._callbacks[ev]=[])).push(callback)
+        };
+        //模型的trigger方法,传入的参数就是事件类型,触发该事件类型,就会调用_callbacks[ev]里所有的函数
+        User.trigger = function(ev){
+            var callbacks,callbacksEv;
+            if(!(callbacks=this._callbacks)){return this}
+            if(!(callbacksEv=callbacks[ev])){return this}
+            jQuery.each(callbacksEv,function(){this()})
+        };
+        //模型的create方法,传入的参数就是实例化模型时,新对象需要继承的对象
+        User.create = function(obj){
+            //将实例化的对象放入records记录中
+            this.records.push(new this(obj));
+            //触发change事件
+            this.trigger('change')
+        };
+        //这里需要操作dom元素,需要加载完页面后执行
+        jQuery(function(){
+            //为模型添加change事件,当模型记录发生更新时,触发change事件,更新视图
+            //注意,这里的User.records是一个数组,在tmpl方法中传入数组的情况,在下一节1.7中单独举例
+            User.bind('change',function(){
+                //这里必须用User.records,而不是this.records
+                var tmp = $('#movieTemplate').tmpl(User.records);
+                $('.view').html('');
+                $('.view').append(tmp);
+            });
+            var object = {
+                message:["bunny","cat","dog"],
+                name:["xiaobao","miao","wang"]
+            };
+            var objectNew = {
+                message:["cat","dog","bunny"],
+                name:["miao","puppy","xiaobao"]
+            };
+            User.create(object);
+            setTimeout(function(){
+                User.create(objectNew)
+            },2000)
+        })
+    </script>
+</head>
+
+<body>
+    <div class="view"></div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+</head>
+<body>
+<input type="button" id="button" value="button"/>
+
+<script type="text/javascript">
+//改变方法的上下文,并且带有参数:
+var Class = function(name){
+    this.name = name;
+};
+var jyh = new Class('jyh');
+var zxg = new Class('zxg');
+//给jyh实例添加私有方法:
+jyh.intro = function(job){console.log(this.name+','+job)};
+//给jyh实例添加一个相同私有方法,但是使this上下文指向zxg实例:
+//注意,使用bind方法,是不执行方法的,只是改变方法里的上下文,并且传入执行该方法时的参数
+//注意,参数是在bind的同时定义的,而不是执行的时候定义的,详细参考bing-3.html
+jyh.introOther = jyh.intro.bind(zxg,'php');
+jyh.intro('web-front-end');    //指针指向自己,传入参数
+jyh.introOther();
+
+</script>
+
+</body>
+</html>

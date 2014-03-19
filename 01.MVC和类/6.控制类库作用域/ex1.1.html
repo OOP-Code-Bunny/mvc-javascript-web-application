@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+</head>
+<body>
+<input type="button" id="button" value="button"/>
+
+<script type="text/javascript">
+var Class = function(parent){
+    var klass = function(){
+        this.init.apply(this,arguments);
+    };
+    if(parent){
+        var _klass = function(){};
+        _klass.prototype = parent.prototype;
+        klass.prototype = new _klass;
+    }
+    klass.fn = klass.prototype;
+    klass.fn.init = function(){
+        console.log(this);
+    };
+    //proxy是Class实例化再实例化后的方法,所以,它应该是原型的方法
+    klass.fn.proxy = function(fun,thisObj){
+        return function(){
+            if(thisObj){
+                fun.apply(thisObj,arguments);
+            }
+            else {
+                fun.apply(this,arguments)
+            }
+        }
+    };
+    //extend和include是Class实例化以后的方法,所以,它可以是类的方法
+    klass.extend = function(obj){
+        for(i in obj){
+            klass[i]=obj[i];
+        }
+        if(obj.extended){
+            klass.extended(klass);
+        }
+    };
+    klass.include = function(obj){
+        for(i in obj){
+            klass.fn[i]=obj[i];
+        }
+        if(obj.included){
+            klass.fn.included(klass);
+        }
+    };
+
+    return klass;
+};
+var Button = new Class();
+Button.include({
+    init:function(elementID){
+        this.element = document.getElementById(elementID);
+        //如果传入两个参数,第二个参数被指定为触发事件后,事件函数中的上下文
+        this.element.onclick = this.proxy(this.click,this);
+        //如果只传入一个参数,触发事件后,事件函数中的上下文还是指向触发事件的元素
+        //this.element.onclick = this.proxy(this.click);
+    },
+    click:function(){
+        console.log(this);
+    }
+});
+var button = new Button('button');
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>上下文</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+    <style type="text/css">
+      .destroy {
+        width:200px; height:200px; background:#00b78e;
+      }
+      .yellow {
+        background:#ffefcd;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="destroy"></div>
+  </body>
+  <script type="text/javascript">
+    var Controller = Spine.Class.create({
+      init:function(){
+        this.proxyAll('destroy','render');
+        $('.destroy').click(this.destroy);
+      },
+      destroy:function(e){
+        this.render(e)
+      },
+      render:function(e){
+        $(e.target).toggleClass(this.color);
+      },
+      color:"yellow"
+    });
+
+    var controll = Controller.init();
+
+    /*proxyAll()方法,将需要改变this指正的方法名字一一传入作为参数,改变这些方法里的this指针指向
+    * */
+  </script>
+</html>
+
+

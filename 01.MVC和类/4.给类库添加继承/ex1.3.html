@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+</head>
+<body>
+
+<script type="text/javascript">
+    var Class = function(parent){
+        var klass = function(parent){
+            this.init.apply(this,arguments);
+        };
+
+        if(parent){
+            var _class = function(){};
+            _class.prototype = parent.prototype;
+            klass.prototype = new _class();
+        }
+
+        klass.fn = klass.prototype;
+        klass.fn.parent = klass;             /*一样,不知道这样定义干嘛*/
+        klass._super = klass.__proto__;      /*一样,不知道这样定义干嘛*/
+
+        klass.prototype.init = function(){
+            console.log(this);
+        };
+
+        klass.entend = function(obj){
+            for(i in obj){
+                klass[i]=obj[i];
+            }
+            if(obj.extended){
+                obj.extended(klass);
+            }
+        };
+
+        klass.include = function(obj){
+            for(i in obj){
+                klass.fn[i]=obj[i];
+            }
+            if(obj.included){
+                obj.included(klass);
+            }
+        };
+
+        return klass;
+    };
+
+    //创建Tutu构造函数;
+    var Tutu = new Class;
+    //给Tutu构造函数添加原型的方法;
+    Tutu.include({love:function(){alert('I love U')}});
+    //创建Zhouzhou构造函数,使它继承Tutu的原型方法;
+    var Zhouzhou = new Class(Tutu);
+    //通过Zhouzhou构造函数创建实例;
+    var zhouzhou = new Zhouzhou;
+    //可以看到,zhouzhou实例也拥有Tutu构造函数的原型的方法
+    zhouzhou.love();
+
+
+</script>
+
+</body>
+</html>

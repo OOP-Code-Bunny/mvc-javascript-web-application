@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>获取记录</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+  </head>
+  <body>
+
+  </body>
+  <script type="text/javascript">
+    var Task = Spine.Model.setup('renwu',['name','done']);
+
+    var newTask1 = Task.init({
+      name:"newTask1",
+      done:true,
+      toggle:function(){
+        this.done = !this.done
+      }
+    });
+    newTask1.save();
+
+    var newTask2 = Task.create({
+      name:"newTask2",
+      done:false,
+      toggle:function(){
+        this.done = !this.done
+      }
+    });
+
+    var newTask3 = Task.init();
+
+    var pending = Task.select(function(task){return task.done});
+    for(var i in pending){
+      console.log(pending[i])
+    }
+
+    var tasks = Task.each(function(task){task.done = !task.done});
+
+    pending = Task.select(function(task){return task.done});
+    for(var i in pending){
+      console.log(pending[i])
+    }
+
+    /*在模型上调用each(funcion(task){
+    * 其中,task是遍历本地存储记录,函数体中可以进行任何自定义操作,它和select最大的区别是,无论函数返回什么,它都不会把记录取出,仅仅是用于操作记录
+    * })
+    * 在这个例子中,首先通过select取出done属性为true的记录,然后,通过each,操作记录的done属性,取反,然后再次使用select取出done属性为true的记录,发现两次取出的记录刚好相反
+    * */
+
+   </script>
+</html>
+
+

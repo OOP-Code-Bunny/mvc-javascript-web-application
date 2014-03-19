@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>模型事件</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+  </head>
+  <body>
+
+  </body>
+  <script type="text/javascript">
+    var Task = Spine.Model.setup('renwu',['name','done']);
+
+    var newTask1 = Task.init({
+      name:"newTask1",
+      done:true,
+      toggle:function(){
+        this.done = !this.done
+      }
+    });
+
+    var newTask2 = Task.create({
+      name:"newTask2",
+      done:false,
+      toggle:function(){
+        this.done = !this.done
+      }
+    });
+
+    Task.first().bind('saved',function(){
+      console.log(this.name, 'was saved')
+    });
+
+    newTask2.trigger('saved');
+
+
+    /*first()获取第一条记录,注意,是第一条有id的记录,newTask1没有添加到本地存储中,不会被获取
+    * 为单条的记录绑定事件,函数内使用this来指向该记录
+    * */
+
+   </script>
+</html>
+
+

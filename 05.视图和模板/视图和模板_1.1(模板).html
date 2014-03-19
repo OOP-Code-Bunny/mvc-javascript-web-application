@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jquery.tmpl</title>
+    <meta charset="utf-8">
+    <script src="../jquery-1.7.1.min.js"></script>
+    <script src="./jquery.tmpl.js"></script>
+    <script src="./jquery.tmplPlus.js"></script>
+</head>
+<body>
+<!--在html中建立一段script标签段,格式如下:-->
+<!--在模板中可通过${属性名},来获取相应的属性值-->
+<!--也可以通过${方法()},来调用一个方法,获取返回值-->
+<script id="movieTemplate" type="text/x-jquery-tmpl">
+  <li>
+    <a href=${url}>百度一下</a> (${getName()})
+  </li>
+</script>
+<!--在html中建立一段script标签段,格式如下:-->
+<script type="text/javascript">
+var object = {
+  flag:true,
+  url:"http://www.baidu.com",
+  getName:function(){return "Trevor"}
+};
+//获取相应的id的script标签段,调用tmpl方法,传入一个对象作为参数
+var ele=$('#movieTemplate').tmpl(object);
+$("body").append(ele)
+</script>
+
+</body>
+</html>

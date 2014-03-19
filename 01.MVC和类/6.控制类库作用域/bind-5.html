@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+</head>
+<body>
+<input type="button" id="button" value="button"/>
+
+<script type="text/javascript">
+//仅仅为了传参而使用bind,不改变上下文:
+var Class = function(name){
+    this.name = name;
+};
+var jyh = new Class('jyh');
+//给jyh实例添加私有方法:
+jyh.intro = function(job,love){console.log(job+','+love)};
+//尤其适合用在setInterval方法,需要传入空对象{}在第一个参数的位置
+var t = setInterval(jyh.intro.bind({},'web-front-end','rabbit'),3000)
+</script>
+
+</body>
+</html>

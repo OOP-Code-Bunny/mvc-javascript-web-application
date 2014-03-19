@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>委托事件</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.model.ajax.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.model.local.js"></script>
+    <style type="text/css">
+      .destroy {
+        width:200px; height:200px; background:#00b78e; font-family: "MICROSOFT YAHEI"; text-align:center; line-height:200px
+      }
+    </style>
+  </head>
+  <body>
+    <div id="myform">
+      <div class="destroy" data-name="destroy"></div>
+    </div>
+
+  </body>
+  <script type="text/javascript">
+  $(function(){
+    var obj = {
+      el:'#myform'
+    };
+    window.Tasks = Spine.Controller.create({
+      events:{
+        'click div.destroy': 'click'
+      },
+      init:function(){
+        this.bind('change',this.change)
+      },
+      change:function(name){
+        console.log(name)
+      },
+      click:function(e){
+        this.trigger('change',$(e.target).attr('data-name'))
+      }
+    });
+    var tasks = Tasks.init(obj);
+  });
+
+  /* 可以给模型绑定自定义事件,这里的就是this.bind('change',this.change)
+  * 这样,所有通过该模型实例化的控制器,都绑定了这个自定义的change事件和它的回调函数
+  * */
+
+   </script>
+</html>
+
+

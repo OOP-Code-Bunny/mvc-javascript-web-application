@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+</head>
+<body>
+
+<script type="text/javascript">
+    var Class = function(parent){
+        var klass = function(parent){
+            this.init.apply(this,arguments);
+        };
+
+        //这里的klass原型的init方法定义在这里是没用的,后面会被覆盖掉,必须要定义到第27行
+        //klass.prototype.init = function(){
+        //    console.log(this);
+        //};
+
+        //新建一个_class的空构造函数
+        var _class = function(){};
+        //将parent的原型赋值给_class的原型
+        _class.prototype = parent.prototype;
+        //通过原型继承
+        klass.prototype = new _class();
+
+        klass.prototype.init = function(){
+            console.log(this);
+        };
+
+        return klass;
+    };
+
+    var Tutu = function(){
+        alert('tutu')
+    };
+
+    Tutu.prototype.love = function(){
+        alert('I love U')
+    };
+    var Zhouzhou = new Class(Tutu);
+
+    var zhouzhou = new Zhouzhou;
+    zhouzhou.love();
+</script>
+<!--说明: 如果不是通过新建的_class来继承,而是直接klass.prototype = new parent,会导致parent里的非原型的方法的属性的生成,比如Tutu里的alert('tutu')-->
+<!--这就不是我们想要的效果-->
+</body>
+</html>

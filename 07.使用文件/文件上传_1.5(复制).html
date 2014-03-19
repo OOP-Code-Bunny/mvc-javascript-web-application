@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <style type="text/css">
+  </style>
+  <script src="../jquery-1.7.1.min.js"></script>
+  <script type="text/javascript">
+    $(function(){
+      $('textarea').bind('copy',function(e){
+          e.stopPropagation();
+          e.preventDefault();
+          /*确认事件被触发*/
+          //console.log($(this).val())
+          var event = e.originalEvent;
+          var clipBoard = event.clipboardData;
+          if(!clipBoard){
+              clipBoard = window.clipboardData;
+          }
+          if(!clipBoard){
+              return
+          }
+          clipBoard.setData('text/plain',$(this).val());
+      })
+    })
+  </script>
+</head>
+<body>
+<textarea cols="30" rows="10"></textarea>
+</body>
+</html>

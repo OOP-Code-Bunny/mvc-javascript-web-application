@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+</head>
+<body>
+
+<script type="text/javascript">
+    var Class = function(){
+        var klass = function(name){
+            this.init.apply(this,arguments);
+        };
+        klass.prototype.init = function(){
+            console.log(this.name);
+        };
+        return klass;
+    };
+
+    //通过类库Class创建Tutu构造函数
+    var Tutu = new Class;
+    //创建空的Zhouzhou构造函数
+    var Zhouzhou = function(name){this.name = name};
+    //使Zhouzhou构造函数继承Tutu构造函数的原型方法;
+    //这样做会有一个问题,就是会执行一次Tutu里的this.init.apply()...下一章中ex1.2里的说明有讲到...
+    Zhouzhou.prototype = new Tutu;
+    //通过Zhouzhou构造函数创建实例
+    var zhouzhou = new Zhouzhou('粥粥');
+    //可以看到,Zhouzhou构造函数继承了Tutu构造函数的原型的方法,所以,实例zhouzhou,也拥有了其构造函数Zhouzhou的原型的方法init
+    zhouzhou.init();
+
+</script>
+
+</body>
+</html>

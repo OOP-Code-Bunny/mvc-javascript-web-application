@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=utf-8>
+  <style type="text/css">
+    *{
+      font-size:12px;
+      margin:0;
+      padding:0;
+    }
+
+    .clear {
+      clear:both
+    }
+
+    body {
+      padding:30px
+    }
+
+    #attach {
+      width:100px;
+      height:30px;
+      border:1px solid #00B7FF;
+      background:#cae2fd;
+      border-radius:4px;
+      color:#00B7FF;
+      font-size:12px;
+      line-height:30px;
+      text-align:center;
+      margin:auto;
+      padding:0
+    }
+
+    #drop {
+      margin: 30px auto;
+      padding: 60px 30px;
+      width:500px;
+      text-align: center;
+      border: 1px dashed #ccc;
+      background:#f3f3f3;
+    }
+    #drop.dropover {
+      border-color:#cae2fd;
+    }
+
+    #drop h1 {
+      font-size:12px; font-weight:normal; color:#bbb
+    }
+
+    textarea{
+      border:1px solid #46b8da; color:#46b8da
+    }
+
+    span{
+      color:#aaa; line-height:20px
+    }
+
+    ul {
+      width:500px; margin:20px auto 0
+    }
+
+    li {
+      float:left; list-style:none; margin-right:16px
+    }
+
+    li img {
+      width:50px; height:50px; border:1px solid #dddddd; padding:1px
+    }
+
+    li span {
+      display:block; text-align:center; line-height:20px; width:50px; overflow:hidden; text-overflow: ellipsis
+    }
+
+    .btn {
+      width:100px;
+      height:30px;
+      border:1px solid #ccc;
+      background:#eee;
+      color:#666666;
+      text-align:center;
+      line-height:30px;
+      border-radius:4px;
+      margin:14px auto 0;
+    }
+
+    .name {
+      font-size:12px; font-family:'MICROSOFT YAHEI'; color:#ccc; text-align:center; margin:8px 0 25px 0
+    }
+
+    .progress {
+      height:10px; border-radius:5px; width:500px; margin:auto; background:#cae2fd; position:relative; display:none
+    }
+
+    .progress span {
+      display:block; height:10px; position:absolute; left:0; top:0; background:#00B7FF; width:1px; border-radius:5px;
+    }
+
+  </style>
+  <script src="../jquery-1.7.1.min.js"></script>
+  <script src="./jquery.drop.js"></script>
+  <script src="./jquery.upload.js"></script>
+  <script src="./jquery.browse.js"></script>
+
+  <script type="text/javascript" charset="utf-8">
+    jQuery(function(){
+      var body = $('body');
+
+      /*上传文件的函数*/
+      var uploadFile = function(file){
+        var progressBar = $('<div>');
+        progressBar.addClass('progress');
+        var progressSpan = $('<span>');
+        progressBar.append(progressSpan);
+        body.append(progressBar);
+
+        var fileName = $('<div>');
+        fileName.addClass('name');
+        fileName.text(file.name+'正在上传');
+        body.append(fileName);
+
+        var progress = function(e){
+          progressBar.show();
+          var percent = Math.round((e.position/e.total)*500);
+          progressSpan.css({width:percent+'px'})
+        };
+
+        var success = function(e){
+          progressBar.remove();
+          fileName.text(file.name+'上传完成');
+        };
+
+        $.upload('./upload.php',file,{upload:{progress:progress},success:success});
+      };
+
+      /*被拖拽区域处理*/
+      var dropArea = $('#drop');
+      var options = {};
+      options.drop = function(e){
+        var files = e.originalEvent.dataTransfer.files;
+        for (var i=0; i<files.length; i++){
+          uploadFile(files[i]);
+        }
+        $(e.target).removeClass('dropover');
+        e.preventDefault();
+        e.stopPropagation();
+      };
+      dropArea.dropArea(options);
+
+      /*选择文件按钮处理*/
+      var hiddenInput = $('#attach').browseElement();
+
+      var hiddenFiles = [];         //此数组存放已选择的文件
+      var hiddenFilesList = [];     //此数组存放已选择的文件的名字dom元素
+
+      hiddenInput.change(function(){
+        var files = this.files;
+        var reg = new RegExp(/image.*/);
+        $.each(files,function(i){
+          //如果是图片,显示预览图
+          if((this.size<50000000) && reg.test(this.type)){
+            var file = this;
+            var reader = new FileReader();
+            reader.readAsDataURL(this);
+            reader.onload = function(e){
+              var data = e.target.result;
+              var newLi = $('<li>');
+              var newImg = $('<img>');
+              newImg.attr('src',data);
+              var newSpan = $('<span>');
+              newSpan.text(file.name);
+              newLi.append(newImg);
+              newLi.append(newSpan);
+              $('ul').append(newLi);
+            };
+          }
+          //将已经选择文件名字输出到页面上,并将这些dom元素存放到hiddenFilesList数组中
+          var fileName = $('<div>');
+          fileName.addClass('name');
+          fileName.text(this.name+'已添加');
+          body.append(fileName);
+          hiddenFilesList.push(fileName);
+          //将需要上传的文件存放到hiddenFiles数组中
+          hiddenFiles.push(this);
+        });
+      });
+
+      /*点击上传的处理事件*/
+      $('.btn').click(function(){
+        for(var i=0; i<hiddenFiles.length; i++){
+          //将准备上传的文件名清空
+          hiddenFilesList[i].remove();
+          //依次上传文件
+          uploadFile(hiddenFiles[i]);
+        }
+      })
+
+    })  
+  </script>
+</head>
+<body>
+  <form action="">
+  </form>
+  <div id="attach">选择文件</div>
+  <div class="btn">确认上传</div>
+  <div id="drop">
+    <h1>或请将文件拖拽至此</h1>
+  </div>
+  <ul></ul>
+  <div class="clear"></div>
+
+</body>
+</html>

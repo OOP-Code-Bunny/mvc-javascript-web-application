@@ -1,0 +1,2 @@
+可以在cmd窗口中通过node运行以下路径文件:
+C:\Users\2000104591\nodeJs\block\application.js

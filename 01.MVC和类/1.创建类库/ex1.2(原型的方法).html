@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <script src="../../jquery-1.7.1.min.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+    var Class = function(name){
+        this.name = name;
+        //注意,不可以这样定义,会提示不能为未定义的对象设置init方法,因为this还不确定是谁,所以不能为this的原型设置方法SSSS
+        //this.prototype.init=function(){console.log(this)};
+        this.init.apply(this,arguments);
+    };
+    Class.prototype.init = function(){
+        console.log(this);
+    };
+    console.log(Class.init);     //得到的结果是undefined
+    console.log(Class.prototype.init);  //能够得到正确的结果
+
+    var person = new Class('person');
+    console.log(person.init);    //由于person是Class的实例,所以,person.init就是Class.prototype.init
+    console.log(person.prototype.init);   //person实例没有原型的init方法
+
+//    总结:一切皆为对象,虽然我们用大写开头的表示它是构造函数,用小写开头的表示它是实例,但是,在ex1.1里(还有很多时候),
+//    实例可以是另一个实例的构造函数,总体来说,一个对象,它的prototype的方法,会成为它的实例的类方法
+//    使用prototype给类库添加方法,有一些好处:
+//    1.可以后定义,比如这里如果用this.init定义,则必须定义在类库里,必须在this.init.apply之前定义,但prototype可以定义在后面
+//    2.可以继承,类的方法原型无法继承,但是原型的方法实例化后,会变成实例的类的方法,也可以通过继承,变成实例的原型的方法,关于继承,后面再详谈
+</script>
+
+</body>
+</html>

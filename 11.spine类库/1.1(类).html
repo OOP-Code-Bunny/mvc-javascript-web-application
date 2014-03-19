@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>类</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+  </head>
+  <body>
+  </body>
+  <script type="text/javascript">
+    var User = Spine.Class.create(
+      {
+        name:"codeBunny"
+      },
+      {
+        color:"black"
+      }
+    );
+    console.log(User.prototype.name);
+    console.log(User.color);
+    var me = User.create();
+    console.log(me.prototype.name);
+    console.log(me.color);
+    /*create()创建一个子类,传入两个参数,第一个参数是类的原型的属性,第二个参数,是类的属性
+    * 创建的子类继承了父类,最底层的父类就是Spine.Class
+    * 注意,创建子类,类似于复制了一个类,不是实例化类
+    * */
+  </script>
+</html>
+
+

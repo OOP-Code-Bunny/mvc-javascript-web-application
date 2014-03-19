@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+</head>
+<body>
+
+<script type="text/javascript">
+var Model = {
+    name: 'Model',
+    extend: function(obj){
+        for(var i in obj){
+            this[i] = obj[i];
+        }
+        if(obj.extended){
+            obj.extented();
+        }
+    },
+    include: function(obj){
+        for(var i in obj){
+            this.prototype[i] = obj[i];
+        }
+        if(obj.included){
+            obj.included();
+        }
+    },
+    inherited: function(){console.log('inherited函数内容')},
+    created: function(){
+        //下一篇会讲到这个函数的作用
+    },
+    prototype:{
+        init:function(){
+            console.log(arguments[0])
+        }
+    },
+    create:function(){
+        var obj = Object.create(this);
+        obj.created();
+        obj.parent = this;
+        return obj;
+    },
+    createProto:function(){
+        var obj = Object.create(this.prototype);
+        obj.parent = this;
+        obj.init.apply(obj,arguments);
+        return obj;
+    }
+};
+
+//通过Model创建一个对象
+var model = Model.create();
+model.inherited();
+model.created();
+model.prototype.init(model);
+
+//通过Model创建它的实例对象
+var modelProto = Model.createProto();   //undefined
+modelProto.init(modelProto);
+
+//为Model添加原型方法:
+Model.include({
+    init:function(obj){
+        this.load(obj);
+    },
+    load:function(obj){
+        for(var i in obj){
+            this[i]=obj[i];
+        }
+    }
+});
+//即使是已经创建的Model的对象,也会继承后添加的Model的方法和原型的方法
+//所以这里我们用model来创建它的实例对象,和通过Model来创建它的实例对象,都可以得到想要的对象(除了parent属性指向不同)
+var newModelProto = model.createProto({name:'newModelProto'});
+console.log(newModelProto);
+
+//通过id记录通过各个元素的继承关系:
+Model.extend({
+    records:{},                  //模型的records用于存放通过该模型创建的实例
+    find:function(id){           //find函数,通过id寻找通过该模型创建的,指定id的实例
+        if(this.records[id]){
+            return this.records[id]
+        }
+        else{
+            throw('Unknown record');
+        }
+    }
+});
+Model.include({
+    newRecord:true,                          //每个通过Model创建的实例都有一个newRecord属性,用于记录该实例是否被记录到父模型中
+    create:function(){                       //创建记录
+        this.newRecord=false;                //创建过记录的实例的newRecord属性变为false
+        this.parent.records[this.id]=this;   //将对象记录到父模型的records属性中
+    },
+    destroy:function(){                      //销毁记录
+        delete this.parent.records[this.id]; //将对象已经记录到父模型的records属性中的相应记录删除
+    },
+    update:function(){                       //更新记录
+        this.parent.records[this.id]=this;
+    },
+    save:function(){                         //创建或更新记录
+        this.newRecord? this.create() : this.update();    //如果已经被记录,则更新,如果没有被记录过,则记录
+    }
+});
+var model1 = model.createProto({id:'model1',name:'model1'});
+model1.save();
+var model2 = model.createProto({id:'model2',name:'model2'});
+model2.save();
+console.log(model.find('model1').name);
+console.log(model.find('model2').name);
+model2.destroy();
+console.log(model.find('model2').name);
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>获取记录</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+  </head>
+  <body>
+
+  </body>
+  <script type="text/javascript">
+    var Task = Spine.Model.setup('renwu',['name','done']);
+
+    var newTask1 = Task.init({
+      name:"Empty",
+      done:true,
+      toggle:function(){
+        this.done = !this.done
+      }
+    });
+    newTask1.save();
+
+    var newTask2 = Task.create({
+      name:"Empty",
+      done:false,
+      toggle:function(){
+        this.done = !this.done
+      }
+    });
+
+    var newTask3 = Task.create({
+      name:"task3",
+      done:false,
+      toggle:function(){
+        this.done = !this.done
+      }
+    });
+
+    var first = Task.findByAttribute("name","Empty");
+    console.log(first);
+
+    var all = Task.findAllByAttribute("name","Empty");
+    console.log(all);
+
+    /*在模型上调用findByAttribute(name,value),
+    * 会在本地记录中查找第一条拥有name属性,并且属性值为value的记录,返回该记录
+    * 在模型上调用findAllByAttribute(name,value),
+    * 会在本地记录中查找所有拥有name属性,并且属性值为value的记录,返回这些记录组成的对象
+    * */
+
+   </script>
+</html>
+
+

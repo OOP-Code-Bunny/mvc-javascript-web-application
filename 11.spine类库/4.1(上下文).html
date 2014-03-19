@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>上下文</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+    <style type="text/css">
+      .destroy {
+        width:200px; height:200px; background:#00b78e;
+      }
+      .yellow {
+        background:#ffefcd;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="destroy"></div>
+  </body>
+  <script type="text/javascript">
+    var Controller = Spine.Class.create({
+      init:function(){
+        $('.destroy').click(this.proxy(this.destroy));
+      },
+      destroy:function(e){
+        console.log(e.target);
+        $(e.target).addClass(this.color);
+      },
+      color:"yellow"
+    });
+
+    var controll = Controller.init();
+
+
+    /*proxy()方法,改变方法里的this指针指向...如果不用proxy,这个例子中的this.color,this指的是'.destroy'元素,而不是controll实例
+    * */
+  </script>
+</html>
+
+

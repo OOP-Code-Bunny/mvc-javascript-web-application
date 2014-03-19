@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+</head>
+<body>
+<input type="button" id="button" value="button"/>
+
+<script type="text/javascript">
+
+var nop = function(){};
+var bound = function(){};
+//bound通过原型继承自nop;
+bound.prototype = new nop();
+//aBound是bound的实例;
+var aBound = new bound();
+//aBound instanceof nop 为true
+alert(aBound instanceof nop);
+//aBound instanceof bound 也为true
+alert(aBound instanceof bound);
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>获取记录</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+  </head>
+  <body>
+
+  </body>
+  <script type="text/javascript">
+    var Task = Spine.Model.setup('renwu',['name','done']);
+
+    var newTask1 = Task.init({
+      name:"Empty",
+      done:false,
+      toggle:function(){
+        this.done = !this.done
+      }
+    });
+    newTask1.save();
+
+    var newTask2 = Task.create({
+      name:"Empty",
+      done:false,
+      toggle:function(){
+        this.done = !this.done
+      }
+    });
+
+    var newTask3 = Task.init();
+
+    var tasks = Task.all();
+    for(var i in tasks){
+      console.log(tasks[i])
+    }
+
+    /*在模型上调用all(),可以返回所有有id的本地存储记录
+    * */
+
+   </script>
+</html>
+
+

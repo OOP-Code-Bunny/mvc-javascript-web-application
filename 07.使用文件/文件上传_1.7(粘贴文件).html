@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <style type="text/css">
+      *{font-size:12px}
+
+      textarea{
+          border:1px solid #46b8da; color:#46b8da
+      }
+
+      span{
+          color:#aaa; line-height:20px
+      }
+
+      span.plain,span.html{
+          color:#46b8da
+      }
+  </style>
+  <script src="../jquery-1.7.1.min.js"></script>
+  <script type="text/javascript">
+/*  这里例子取消了默认的复制粘贴事件,而是复制第一个文本域任何内容时,都设置clipboardData属性和值,
+    然后粘贴的时候,通过获取clipboard.types属性和clipboard的getData方法来获取相关的属性值,然后添加到指定的div中*/
+    $(function(){
+      var textarea = $('textarea.text');
+      textarea.bind('paste',function(e){
+          /*默认的粘贴效果不再有*/
+          e.stopPropagation();
+          e.preventDefault();
+          /*确认事件触发*/
+          //console.log($(this).val());
+          var event = e.originalEvent;
+          var clipBoard = event.clipboardData;
+          if(!clipBoard){
+              clipBoardclipBoard = window.clipboardData;
+          }
+          if(!clipBoard){
+              return
+          }
+          /*可以获取到该对象,但是没有办法复制文件进去*/
+          var clipFiles = clipBoard.files;
+          console.log(clipFiles);
+      })
+    })
+  </script>
+</head>
+<body>
+<textarea class="text" cols="30" rows="10"></textarea>
+</body>
+</html>

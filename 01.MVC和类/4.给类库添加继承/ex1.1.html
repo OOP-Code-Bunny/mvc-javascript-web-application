@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+</head>
+<body>
+
+<script type="text/javascript">
+    var Class = function(parent){
+        var klass = function(parent){
+            this.init.apply(this,arguments);
+        };
+
+        //将klass的prototype的init方法定义在这里,等下继承的时候会被覆盖掉,没有作用
+        klass.prototype.init = function(){
+            console.log(this);
+        };
+
+        var _class = function(){};
+        _class.prototype = parent.prototype;
+        klass.prototype = new _class();
+
+        klass.fn = klass.prototype;
+        klass.fn.parent = klass;             /*一样,不知道这样定义干嘛*/
+        klass._super = klass.__proto__;      /*一样,不知道这样定义干嘛*/
+
+        return klass;
+    };
+
+    var Tutu = function(){
+        this.init.apply(this,arguments);
+    };
+    //Tutu构造函数里,也有init方法,则会覆盖掉klass.prototype.init方法,即使没有此方法也会覆盖掉,参考ex1.2
+    Tutu.prototype.init = function(){
+        alert(this);
+    };
+    Tutu.prototype.love = function(){
+        alert('I love U')
+    };
+    //Zhouzhou构造函数会继承Tutu的原型的方法
+    var Zhouzhou = new Class(Tutu);
+    var zhouzhou = new Zhouzhou;
+    //zhouzhou实例拥有了Tutu里的init方法和love方法
+    zhouzhou.init();
+    zhouzhou.love();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>类扩展</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+  </head>
+  <body>
+  </body>
+  <script type="text/javascript">
+    var ext = {
+      extended:function(){
+        console.log(this);
+        alert('我是执行完extend后的回调')
+      },
+      age:'3'
+    };
+    var inc = {
+      included:function(){
+        console.log(this);
+        alert('我是执行完include后的回调')
+      },
+      color:"black"
+    };
+    var User = Spine.Class.create();
+    User.extend(ext);
+    User.include(inc);
+    console.log(User.age);
+    console.log(User.prototype.color);
+
+    var user = User.init();
+    console.log(user.color);
+
+    /*extend()方法给类添加自身的属性和方法,其中,extended方法是添加完以后的回调
+    * include()方法给类添加原型的方法,其中,included方法是添加完以后的回调
+    * */
+  </script>
+</html>
+
+

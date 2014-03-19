@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <style type="text/css">
+    .dropme {
+      width:80%;
+      margin:30px auto;
+      height:100px;
+      float:left;
+      background:#cae2fd;
+      font-size:12px;
+      line-height:100px;
+      text-align:center;
+      color:#fff
+    }
+    .dropme.dropover {
+      border:1px solid #00B7FF;
+    }
+  </style>
+  <script src="../../jquery-1.7.1.min.js"></script>
+  <script src="./jquery.drop.js"></script>
+  <script type="text/javascript">
+    $(function(){
+      var dropEle=$('.dropme');
+      var options = {};
+      options.drop = function(e){
+        var event = e.originalEvent;
+        var dt = event.dataTransfer;
+        //dt.files获取拖拽入的文件数组
+        var files = dt.files;
+        for(var i=0;i<files.length;i++){
+          alert('Dropped'+files[i].name);
+          console.log(files[i]);
+        }
+        $(e.target).removeClass('dropover');
+        e.stopPropagation();
+        e.preventDefault();
+      };
+      dropEle.dropArea(options);
+    })
+  </script>
+</head>
+<body>
+  <div class="dropme">请在此块区域释放</div>
+</body>
+</html>

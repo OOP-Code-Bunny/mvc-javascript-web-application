@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>渲染模式</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.model.ajax.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.model.local.js"></script>
+    <script type="text/javascript" charset="utf-8" src="arttemplate/build/template.js"></script>
+    <style type="text/css">
+      .list {
+        padding:10px; border:1px solid #ffefcd; margin:10px auto; background:#ffefcd;
+      }
+      p {
+        font-family: 'MICROSOFT YAHEI'; color:#ccc; font-size:12px
+      }
+      p span {
+        color:#00b78e
+      }
+      p.title {
+        font-size:14px; color:#00b78e
+      }
+    </style>
+  </head>
+  <body>
+    <div id="myform">
+    </div>
+
+  </body>
+  <script type="text/javascript">
+  var Task = Spine.Model.setup('renwu',['name','thing']);
+
+  $(function(){
+    var TasksItem = Spine.Controller.create({
+      proxied: ['render','remove'],
+      init: function(){
+        /*
+        item属性是在实例化该控制器的时候传入的,由于实例化是在addOne方法调用时进行的,而addOne中传入的参数又是触发refresh或create时传入的参数,也就是单条记录,所以,每个被TaskItem实例化的控制器的item属性,就是新添加的各条记录
+        */
+        /*
+        记录更新时,重新渲染该记录
+        */
+        this.item.bind('update',this.render);
+        /*
+        记录销毁时,删除该记录的视图
+        */
+        this.item.bind('destroy',this.remove)
+      },
+      /*modules方法,用于渲染单条记录的视图*/
+      modules: function(items){
+        return (template('tmpl-loading',items))
+      },
+      /*el是包裹记录的div,在创建记录的视图的时候自动生成,然后给它添加类名叫list*/
+      render: function(item){
+        if(item) this.item = item;
+        this.el.html(this.modules(this.item));
+        return this
+      },
+      remove: function(){
+        this.el.remove()
+      }
+    });
+    var Tasks = Spine.Controller.create({
+      /*这个绑定事件,就是要表达,即使元素是后添加进去的,使用事件委托,也一样可以为后添加的元素绑定事件*/
+      events:{
+        'click p.title':'click'
+      },
+      proxied: ['addAll','addOne'],
+      /*当创建记录或者整体更新记录的时候,将新纪录添加进去*/
+      init: function(){
+        Task.bind('create',this.addOne);
+        Task.bind('refresh',this.addAll)
+      },
+      addOne: function(item){
+        /*为每条记录创建一个控制器,控制器的item属性就是传入的参数item,也就是单条记录*/
+        var task = TasksItem.init({item:item});
+        /*记录的el属性就是将记录内容包起来的div.list*/
+        task.el.addClass('list');
+        /*this指的是Tasks的实例,this的el是包含所有记录的div,也就是#myform,
+        * addOne要做的事情,就是把单条记录渲染后的视图插入到#myform中*/
+        this.el.append(task.render().el)
+      },
+      /*对Task的所有记录进行addOne操作
+      * 如果不理解,可以看下7.3(获取记录).html
+      * */
+      addAll: function(){
+        Task.each(this.addOne)
+      },
+      click: function(e){
+        console.log(e.target)
+      }
+    });
+
+    /*实例化Tasks控制器,传入#myform为el,作为放置记录的容器*/
+    var tasks = Tasks.init({el:'#myform'});
+
+    var newTask1 = Task.init({
+      name:'bunny',
+      thing:'eating'
+    });
+
+    var newTask2 = Task.init({
+      name:'cat',
+      thing:'walking'
+    });
+
+    var newTask3 = Task.init({
+      name:'dog',
+      thing:'coding'
+    });
+
+    /*下面的操作可以看到:记录被创建,销毁,更新,都会更新视图*/
+    newTask1.save();
+    newTask2.save();
+    newTask3.save();
+
+    setTimeout(function(){newTask2.destroy()},1000);
+
+    newTask3.thing = 'writing';
+
+    setTimeout(function(){newTask3.update()},3000);
+    setTimeout(function(){Task.refresh([{id:'56B1A34F-CE6A-4454-8FF6-115C268E4F7C',name:'jyh',thing:'吃饭'},{id:'909EC0DD-4B6D-4B41-9D5F-91ADED9A3A6D',name:'zxg',thing:'学习'},{id:'41F1567C-474D-4B6B-B246-D140E2EA0CB1',name:'xiaobao',thing:'喝水'}])},5000);
+  });
+
+
+
+  /* Task模型用于放置数据
+  * TasksItem模型用于创建控制器,每个控制器控制单条记录(即每个div.list)的更新,销毁,渲染
+  * Tasks模型用于创建控制器,该控制器用于记录被创建或初始加载时被添加进去,以及为所有的记录委托事件(比如这里的click事件)
+  * refresh传入一个数组,数组里有多条json格式的记录,需要注意的是,每条记录都必须有id,并且如果id相同,后面的会覆盖前面的,如果id不同,那么原来的记录不会被清除,而是添加新的记录
+  * 这个逻辑有点难懂,需要多看几遍
+  * */
+
+   </script>
+</html>
+
+

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+</head>
+<body>
+<script src="../jquery-1.7.1.min.js"></script>
+<script type="text/javascript">
+
+Math.guid = function(){
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){
+        var r = Math.random()*16|0, v= c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+    }).toUpperCase();
+};
+
+var Model = {
+    name: 'Model',
+    extend: function(obj){
+        for(var i in obj){
+            this[i] = obj[i];
+        }
+        if(obj.extended){
+            obj.extented();
+        }
+    },
+    include: function(obj){
+        for(var i in obj){
+            this.prototype[i] = obj[i];
+        }
+        if(obj.included){
+            obj.included();
+        }
+    },
+    inherited: function(){console.log('inherited函数内容')},
+    created: function(){
+        this.records={};
+				this.attribute=[];
+    },
+    prototype:{
+        init:function(){
+            //用于创建实例对象的时候,继承想要继承的对象
+            //后面会用include重写
+        }
+    },
+    create:function(){
+        var obj = Object.create(this);
+        obj.created();
+        obj.parent = this;
+        return obj;
+    },
+    createProto:function(){
+        var obj = Object.create(this.prototype);
+        obj.parent = this;
+        obj.init.apply(obj,arguments);
+        return obj;
+    }
+};
+
+var model = Model.create();
+model.inherited();
+model.prototype.init(model);
+
+var modelProto = Model.createProto();   //undefined
+modelProto.init(modelProto);
+
+Model.include({
+    init:function(obj){
+        this.load(obj);
+    },
+    load:function(obj){
+        for(var i in obj){
+            this[i]=obj[i];
+        }
+    }
+});
+
+Model.extend({
+    records:{},                  //模型的records用于存放通过该模型创建的实例
+    find:function(id){           //find函数,通过id寻找通过该模型创建的,指定id的实例
+        if(this.records[id]){
+            return this.records[id].copy();
+        }
+        else{
+            try{
+                throw('Unknown record');
+            }
+            catch(err){
+                console.log(err);
+            }
+        }
+    }
+});
+
+Model.include({
+    newRecord:true,                          //每个通过Model创建的实例都有一个newRecord属性,用于记录该实例是否被记录到父模型中
+    create:function(){                       //创建记录
+        if(!this.id) this.id=Math.guid();    //创建的时候就给对象添加随机id,不需要手动添加id
+        this.newRecord=false;                //创建过记录的实例的newRecord属性变为false
+        this.parent.records[this.id]=this.copy();   //将对象的副本记录到父模型的records属性中
+    },
+    destroy:function(){                      //销毁记录
+        delete this.parent.records[this.id]; //将对象已经记录到父模型的records属性中的相应记录删除
+    },
+    update:function(){                       //更新记录
+        this.parent.records[this.id]=this.copy();
+    },
+    save:function(){                         //创建或更新记录
+        this.newRecord? this.create() : this.update();    //如果已经被记录,则更新,如果没有被记录过,则记录
+    },
+    copy:function(){                         //创建copy函数,返回一个对象的副本
+        return jQuery.extend(true,{},this);
+    }
+});
+
+Model.include({		
+    attribute:function(){
+        var result={};
+        var attr=this.parent.attribute;
+        for(var i in attr){
+            result[attr[i]]=this[attr[i]];
+        }
+        result.id = this.id;
+        return result;
+    },
+    toJSON:function(){
+		return this.attribute();
+    }
+});
+
+Model.extend({
+    saveLocal: function(name){
+        var result = [];
+        for(var i in this.records){
+            result.push(this.records[i]);
+        }
+        console.log(JSON.stringify(result));
+        localStorage[name] = JSON.stringify(result);
+    } ,
+    loadLocal: function(name){
+        console.log(JSON.parse(localStorage[name]));
+        //加载本地存储(暂时没有讲到popluate函数的内容,但是可以知道,它的作用就是加载本地存储的数据)
+        //this.populate(JSON.parse(localStorage[name]));
+    }
+});
+
+//将新纪录提交给服务器(需要去内江请教一下老公)
+Model.include({
+    //添加提交数据的方法
+    createRemote: function(url, callback){
+        $.ajax({
+            url:url,
+            data:this.attribute(),
+            success:callback,
+            type:'POST'
+        })
+    },
+    //添加更新数据的方法
+    updateRemote: function(url, callback){
+        $.ajax({
+            url:url,
+            data:this.attribute(),
+            success:callback,
+            type:'PUT'
+        })
+    }
+});
+model.attribute=['name','love'];
+var model1 = model.createProto({name:'model1',love:'bunny'});
+model1.save();
+console.log(model1.attribute());
+console.log(model.records);
+var json = JSON.stringify(model.records);
+console.log(json);
+model.saveLocal('model1');
+var model2 = model.createProto({name:'model2',love:'puppy'});
+model2.save();
+model.saveLocal('model1_2');
+model.loadLocal('model1');
+model.loadLocal('model1_2');
+
+//将新纪录提交给服务器 (需要去内江请教一下老公)
+model1.createRemote('/model/modelData.php',function(data){console.log(data)});
+
+</script>
+
+</body>
+</html>

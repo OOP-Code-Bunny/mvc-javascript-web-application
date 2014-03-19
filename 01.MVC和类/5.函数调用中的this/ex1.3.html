@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>维持绑定事件中的this指针</title>
+    <meta charset="utf-8">
+</head>
+<body>
+<input type="button" id="button" value="button"/>
+
+<script type="text/javascript">
+//只改变点击事件所需调用的方法的this,而不改变执行该方法时,里面的this
+//就是说,this.clicked这里的this,需要指向clicky,但是,this.clicked方法里的console.log里的this,还是要指向触发事件的button
+var clicky = {
+   clicked:function(){console.log(this)},
+   addEvent:function(){
+       document.getElementById('button').onclick = jquery.proxy(this.clicked)
+   }
+};
+//自己写的,并非真的jquery里就是这样写的.
+var jquery = {
+   proxy: function(fun,thisObj){
+       //如果把this写在这里,那么,是jquery执行proxy方法时的this,指向是jquery
+       //console.log(this);
+       return(function(){
+           //把this写在这里,那么,谁调用这个完整的匿名函数,就指向谁,也是就正常的指向button元素
+           //console.log(this);
+           //如果传入了执行fun方法时需要用到的上下文,那么就使用该上下文
+           if(thisObj){
+               return fun.apply(thisObj,arguments);
+           }
+           //如果没有传入执行fun方法时需要用到的上下文,那么,使用正常的触发点击事件的dom元素作为上下文
+           else{
+               //如果没有传入执行fun方法是需要用到的上下文,
+               //因为在传参数时,button还没有发生点击事件,没有办法抓取到它,所以不可能把它作为参数传到proxy里
+               //所以,如果不传上下文,就应该使用第26行里的这个正常指向的this
+               //注意,这里的真实结构是这样的:
+               /**
+               function(){
+                   (function(){console.log(this)})(this)
+               }
+               */
+               //因此,fun被执行的时候,this作为参数被传入时,this和第26行是一样的.
+               return fun.apply(this,arguments);
+               //需要特别注意的是,这里不能直接fun(),如果直接fun()的话,它的结构是这样的:
+               /**
+               function(){
+                   (function(){console.log(this)})()
+               }
+                */
+               //当this不再作为参数被传入,而是直接执行fun方法时,它没有当前对象,它不会像变量那样找不到就往外层寻找...它直接就是指向window了...
+               //return fun();  错误的写法
+           }
+       })
+   }
+};
+clicky.addEvent();
+</script>
+
+</body>
+</html>

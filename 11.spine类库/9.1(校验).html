@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>校验</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+  </head>
+  <body>
+
+  </body>
+  <script type="text/javascript">
+    var Task = Spine.Model.setup('renwu',['name','done']);
+
+    Task.include({
+      validate:function(){
+        if(!this.name) return "记录必须包含name属性"
+      }
+    });
+
+    Task.bind('error',function(record,msg){
+      alert('任务没有被保存,因为'+msg)
+    });
+
+    var newTask1 = Task.init({
+      done:true,
+      toggle:function(){
+        this.done = !this.done
+      }
+    });
+    newTask1.save();
+
+    var newTask2 = Task.create({
+      name:"newTask2",
+      done:false,
+      toggle:function(){
+        this.done = !this.done
+      }
+    });
+
+    console.log(newTask2);
+
+
+    /*模型通过include,添加原型的validate方法,validate方法会在每条记录被保存(即调用save时,被调用),验证函数中的this指向的就是当前记录,验证成功的话返回false,失败的话,返回一个用来解释失败原因的字符串.
+    * 验证失败后会自动触发error事件,error事件需要自己绑定.函数中有两个参数,第一个record表示当前出错的记录,第二个msg就是validate函数中的返回值
+    * 注:我自己改了一下spine.js里面的save方法,使得验证错误不会抛出错误到导致后面的代码无法执行
+    * */
+
+   </script>
+</html>
+
+

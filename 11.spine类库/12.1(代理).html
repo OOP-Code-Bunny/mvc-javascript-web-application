@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>代理</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.model.ajax.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.model.local.js"></script>
+    <style type="text/css">
+      .destroy {
+        width:200px; height:200px; background:#00b78e; font-family: "MICROSOFT YAHEI"; text-align:center; line-height:200px
+      }
+    </style>
+  </head>
+  <body>
+
+  </body>
+  <script type="text/javascript">
+  $(function(){
+    var obj = {
+      name: 'codeBunny',
+      age: '3',
+      eat: 'milkTea',
+      _class: 'destroy'
+    };
+    window.Tasks = Spine.Controller.create({
+      proxied: ['init','add'],
+      init:function(){
+        this.el.bind('append',this.add);
+        this.el.trigger('append')
+      },
+      add:function(){
+        this.el.addClass(this._class).html('code bunny')
+      }
+    });
+    var tasks = Tasks.init(obj);
+    console.log(tasks.el);
+    $('body').append(tasks.el)
+  });
+
+  /* proxied属性是一个数组,数组中存放需要改变this指针的方法
+  * proxied数组中指定的方法,this指针总是指向当前实例
+  * 这里给this.el绑定append事件,那么,this.add里指针应该是指向el元素的,但是通过proxied后,this还是指向tasks
+  * */
+
+   </script>
+</html>
+
+

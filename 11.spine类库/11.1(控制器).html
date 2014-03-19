@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>控制器</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.model.ajax.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.model.local.js"></script>
+    <style type="text/css">
+      .destroy {
+        width:200px; height:200px; background:#00b78e; font-family: "MICROSOFT YAHEI"; text-align:center; line-height:200px
+      }
+    </style>
+  </head>
+  <body>
+    <div class="destroy"></div>
+  </body>
+  <script type="text/javascript">
+  $(function(){
+    window.Tasks = Spine.Controller.create({
+      init:function(){
+        this.el.html('code bunny')
+      }
+    });
+    var tasks = Tasks.init({el:$('.destroy')});
+    console.log(tasks.el);
+  });
+
+
+    /*在页面加载完成后使用Spine.Controller.create()来创建一个控制器,基本上只会传入一个参数,因为控制器基本上只会有实例的方法
+    * 实例化一个控制器,还是使用init方法,每个控制器都有一个el属性(因为控制器就是为了dom元素而设计的),用来放置元素,在init的时候写入
+    * */
+
+   </script>
+</html>
+
+

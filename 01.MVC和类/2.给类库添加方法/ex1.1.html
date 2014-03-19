@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+var Class = function(){
+    var klass = function(){
+        this.init.apply(this,arguments)
+    };
+    //这句话也可以定义在第24行.
+    klass.prototype.init = function(){console.log(this)};
+
+    //定义了klass.fn = klass.prototype以后,这两者就是完全等价同步的,以后再给klass,prototype添加方法,
+    //klass.fn里也会有这个方法,以后再给klass.fn添加方法,klass.prototype里也会有这个方法
+    //因此,这与定义别名的时间是没有关系的,任何时间定义别名,他们都是完全等价的
+    klass.fn = klass.prototype;
+    klass.fn.parent = klass;     /*不知道为什么要这样定义*/
+
+    //klass.fn.init = function(){console.log(this)};
+
+    klass.extend = function(obj){
+        for(i in obj){
+            klass[i] = obj[i];
+        }
+        if(obj.entended) {
+            klass.entended(klass)
+        }
+    };
+
+    klass.include = function(obj){
+        for(i in obj){
+            klass.fn[i] = obj[i];
+        }
+        if(obj.included) {
+            klass.fn.included(klass)
+        }
+    };
+
+    return klass;
+};
+var Person = new Class;
+var me = new Person;
+//添加对象的方法
+Person.extend({play:function(){alert('I can play')},study:function(){alert('I can study')},entended:function(){alert('回调')}});
+var he = new Person;
+//根据:一.1.4(对象的方法),可以知道,添加对象的方法,he实例并不会继承这些方法.要访问这些方法,必须通过以下方式:
+console.log(Person.play);
+
+//添加原型的方法
+Person.include({play:function(){alert('I can play')},study:function(){alert('I can study')},included:function(){alert('回调')}});
+//根据:一.1.2(原型的方法),可以知道,添加原型的方法,she实例会继承这些方法
+var she = new Person;
+</script>
+
+</body>
+</html>

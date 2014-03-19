@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>控制器和状态</title>
+    <meta charset="utf-8">
+    <script src="../jquery-1.7.1.min.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+  alert('页面被加载');
+/*  popstate事件只有在点击后退前进的时候才会触发  */
+//  window.addEventListener('popstate',function(e){
+//    if(e.state){
+//      console.log(e.state);
+//      console.log('触发了popstate事件')
+//    }
+//  });
+  $(window).bind('popstate',function(e){
+    var ev = e.originalEvent;
+    if(ev.state){
+      console.log(ev.state);
+      console.log('触发了popstate事件')
+    }
+  });
+  var dataObject={
+    createdAt:'2014-01-27',
+    author:'code bunny'
+  };
+  var url='new-url.html';
+  //这里的dataObject就是触发popstate事件时传入的事件对象e的state
+
+  setTimeout(function(){
+    var title="控制器和状态_new-url";
+    document.title = title;
+    //pushState:替换url地址,并且将原地址保存进历史记录
+    //第二个参数即使写了也没有作用,书上说是用于设置浏览器历史记录里该页面的名字,但测试证明,无论传入什么值,它都只能是document.title值
+    history.pushState(dataObject,'',url);
+    //replaceState:只替换url地址,不存历史记录
+    //history.replaceState(dataObject,'',url);
+  },1000)
+</script>
+</body>
+</html>

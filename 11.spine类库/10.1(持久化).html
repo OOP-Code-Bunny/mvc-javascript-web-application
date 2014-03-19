@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>持久化</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.model.ajax.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.model.local.js"></script>
+  </head>
+  <body>
+
+  </body>
+  <script type="text/javascript">
+    var Task = Spine.Model.setup('renwu',['name','done']);
+
+    Task.extend(Spine.Model.Local);
+    Task.fetch();
+
+    var newTask1 = Task.init({
+      done:true,
+      toggle:function(){
+        this.done = !this.done
+      }
+    });
+    newTask1.save();
+
+    var newTask2 = Task.create({
+      name:"newTask2",
+      done:false,
+      toggle:function(){
+        this.done = !this.done
+      }
+    });
+
+    console.log(Task.first());
+
+
+    /*链入spine.model.local.js,然后给模型扩展extend(Spine.Model.Local),这样,数据就会记录在本地存储中
+    * 使用fetch()可以把本地存储里的数据填充模型.
+    * 可以看到,如果不使用fetch(),那么,Task.first()记录的id每次刷新都是变化的,使用了fetch以后,这条记录的id不变,都是同一条
+    * */
+
+   </script>
+</html>
+
+

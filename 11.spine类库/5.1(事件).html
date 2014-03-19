@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>事件</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+    <style type="text/css">
+      .destroy {
+        width:200px; height:200px; background:#00b78e;
+      }
+      .yellow {
+        background:#ffefcd;
+      }
+    </style>
+  </head>
+  <body>
+
+  </body>
+  <script type="text/javascript">
+    var User = Spine.Class.create();
+    User.extend(Spine.Events);
+
+    User.bind("create",function(_class){
+      this.destroy = $('<div>');
+      this.destroy.addClass(_class);
+      $('body').append(this.destroy)
+    });
+
+    User.bind("update",function(_class){
+      this.destroy.addClass(_class)
+    });
+
+    User.trigger('create','destroy');
+    setTimeout(function(){User.trigger('update','yellow')},1000);
+
+    /*通过extend(Spine.Events),可以将事件模块添加到类中
+    * Spine.Events提供了三个处理事件的函数:
+    * bind(): 用法同jQ
+    * trigger(): 用法同jQ
+    * unbind(): 用法同jQ
+    * */
+
+   </script>
+</html>
+
+

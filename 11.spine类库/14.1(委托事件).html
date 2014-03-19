@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>委托事件</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.model.ajax.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.model.local.js"></script>
+    <style type="text/css">
+      .destroy {
+        width:200px; height:200px; background:#00b78e; font-family: "MICROSOFT YAHEI"; text-align:center; line-height:200px
+      }
+    </style>
+  </head>
+  <body>
+    <div id="myform">
+      <form action="">
+        <input type="text"/>
+      </form>
+    </div>
+
+  </body>
+  <script type="text/javascript">
+  $(function(){
+    var obj = {
+      el:'#myform'
+    };
+    window.Tasks = Spine.Controller.create({
+      elements:{
+        'form input[type=text]':'input'
+      },
+      events:{
+        'focus input[type=text]':'clear'
+      },
+      init:function(){
+        this.input.val('请输入用户名');
+      },
+      clear:function(e){
+        console.log(e);
+        $(e.target).val('');
+      }
+    });
+    var tasks = Tasks.init(obj);
+  });
+
+  /* 将需要绑定的元素,事件,回调函数,放在events属性中
+  * 属性名是事件 + 空格 + 选择器,属性值是回调函数名
+  * 使用events来绑定事件,不需要使用proxy来调整this指向,spine.js会自动调整
+  * 选择器选择元素的范围就是el,如果不指定选择器,就是绑定在el上
+  * */
+
+   </script>
+</html>
+
+

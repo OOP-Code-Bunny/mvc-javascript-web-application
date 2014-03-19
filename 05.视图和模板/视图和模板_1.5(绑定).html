@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jquery.tmpl</title>
+    <meta charset="utf-8">
+    <script src="../jquery-1.7.1.min.js"></script>
+    <script src="./jquery.tmpl.js"></script>
+    <script src="./jquery.tmplPlus.js"></script>
+    <script id="movieTemplate" type="text/x-jquery-tmpl">
+        <ul>
+            {{each this.data}}
+            <li>
+                <h4>${$index}</h4>
+                {{if $value.length}}
+                <ul>
+                    {{each $value}}
+                    <li>${$index+1}: <em>${$value}</em></li>
+                    {{/each}}
+                </ul>
+                {{else}}
+                <p>nothing!</p>
+                {{/if}}
+            </li>
+            {{/each}}
+        </ul>
+    </script>
+</head>
+<body>
+
+<script type="text/javascript">
+//    addChange是为对象添加change方法的方法
+    var addChange = function(obj){
+        obj.change = function(callback){
+            //如果传入的参数是一个函数,那么,就将该函数添加到该对象的_callbacks属性中
+            if(typeof(callback)==='function'){
+                (this._callbacks || (this._callbacks=[])).push(callback);
+            }
+            //如果传入的参数不是函数,那么就触发所有_callbacks属性中的方法
+            else{
+                if(!this._callbacks){
+                    return
+                }
+                //*apply方法中的第二个参数必须是数组
+                jQuery.each(this._callbacks,function(){console.log(this);this.apply(this,[callback])});
+                //注意:下面这种写法是没用的,因为这里是在调用jQuery的each方法,所以arguments对象指向的是each方法里的两个参数,打开注释可以看到相关内容
+                //jQuery.each(this._callbacks,function(){console.log(arguments);this.apply(this,arguments)});
+            }
+        }
+    };
+    var object = {
+        message:["bunny","cat","dog"],
+        name:["xiaobao","miao","wang"]
+    };
+    var o = {};
+    addChange(o);
+    alert('为o对象绑定加载视图的方法');
+    o.change(function(object){
+        var ele=$('#movieTemplate').tmpl(object);
+        $("body").append(ele)
+    });
+    alert('触发绑定的方法(这时只有加载视图这一个方法)');
+    o.change(object);
+    //alert('为o对象再绑定一个alert方法');
+    o.change(function(){
+        alert('change')
+    });
+    //alert('再次触发绑定的方法(这时有两个方法会被触发)');
+    o.change(object);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>实例化</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+  </head>
+  <body>
+  </body>
+  <script type="text/javascript">
+    var User = Spine.Class.create(
+      {
+        init:function(name){
+          this.name = name
+        },
+        color:"black"
+      }
+    );
+    var user = User.init("codeBunny");
+    console.log(user.name);
+
+    /*init()实例化一个对象,并且可以传入参数
+    * create()创建类时,如果添加了init方法,那么,它会在实例化该类的时候被执行,参数就是实例化的时候传入的参数
+    * 注意,create()参数中的init方法,和实例化init方法,是两个完全不同的东西,不要混淆
+    * */
+  </script>
+</html>
+
+

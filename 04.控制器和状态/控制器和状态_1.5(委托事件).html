@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <script src="../jquery-1.7.1.min.js"></script>
+    <style type="text/css">
+        *{
+            font-size:12px; font-family:'Microsoft YaHei'
+        }
+        .view {
+            background:#FFD64E; text-align: center;
+        }
+        .view.gray {
+            background:#ccc
+        }
+        .bunny.gray {
+            color:#ccc
+        }
+        .miao.gray {
+            color:#ccc
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+var exports = this;
+
+(function($){
+    var Mod = {};
+    Mod.create = function(includes){
+        var result = function(){
+            this.init.apply(this,arguments)
+        };
+
+        result.fn=result.prototype;
+        result.fn.proxy = function(func){return $.proxy(func,this)};
+        result.extend = function(obj){
+            $.extend(this,obj)
+        };
+        result.include = function(obj){
+            $.extend(this.fn,obj)
+        };
+        if(includes){
+            result.include(includes)
+        }
+        return result
+    };
+    exports.Controller = Mod
+})(jQuery);
+
+$(function(){
+    var viewToggleClass = Controller.create({
+        //定义将要操作的元素对象,属性名为jqery选择器,属性值为元素的名字
+        //元素的名字将要成为实例化后的对象的属性名
+        elements:{
+            'span.bunny':'bunny',
+            'span.miao':'miao'
+        },
+        events:{
+            'click bunny':'toggleClass',
+            'mouseover miao':'toggleClass',
+            'mouseout miao':'toggleClass'
+        },
+        init:function(view){
+            //定义视图元素为实例化的时候传入的对象;
+            this.view = view;
+            //根据elements对象,将需要被操作的元素转换成对象的属性,
+            //比如,对象的'bunny'属性,就是相对应的span.bunny元素
+            this.refreshElements();
+            this.refreshEvents();
+        },
+        //在当前视图对象中寻找元素
+        findElement:function(selector){
+            return $(selector,this.view)
+        },
+
+        toggleClass:function(e){
+			this.miao.toggleClass('gray')
+        },
+        //按第一个空格分割字符串
+        eventSplitter: /^(\w+)\s*(.*)$/,
+        //通过elements对象,将需要被操作的元素转换为对象的属性
+        refreshElements:function(){
+            for(var i in this.elements){
+                //属性名
+                var key = this.elements[i];
+                //相应的dom元素
+                this[key] = this.findElement(i);
+            }
+        },
+        //通过events对象,将需要被操作的元素,绑定相应的事件
+        refreshEvents:function(){
+            for(var i in this.events){
+                //获取绑定的事情函数的名字
+                var funcName = this.events[i];
+                //获取绑定的事情函数,并且将指针指向this
+                var func = this.proxy(this[funcName]);
+                //通过正则,获取需要绑定事件的事件类型和元素
+                var key = i.match(this.eventSplitter);
+                var event = key[1], element = this[key[2]];
+                
+				if(element===''){
+                    this.view.bind(event,func);
+                }
+                else{
+                    this.view.delegate(element,event,func)
+                }
+
+            }
+        }
+    });
+    new viewToggleClass($('.view'))
+})
+
+</script>
+
+<div class="view" style="height:50px; width:50px">
+    <span class="bunny">bunny</span>
+    <span class="miao">miao</span>
+</div>
+
+<a>点击查看Mod实例详情</a>
+
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <style type="text/css">
+        *{
+            font-size:12px; font-family:'Microsoft YaHei'
+        }
+        .view {
+            background:#FFD64E
+        }
+        .view.gray {
+            background:#ccc
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+
+    (function($,exports){
+        //这里的Mod是一个构造函数
+        var Mod = function(includes){
+            if(includes) {
+                this.include(includes)
+            }
+        };
+        Mod.fn = Mod.prototype;
+        //Mod的实例有proxy方法,用于将函数的this指针指向Mod实例
+        Mod.fn.proxy = function(func){
+            return $.proxy(func,this)
+        };
+        //Mod的实例有load方法,用于将函数的this指针指向Mod实例,并在页面加载完后执行
+        Mod.fn.load = function(func){
+            $(this.proxy(func))
+        };
+        //Mod的实例有include方法,用于继承其它对象的方法为自己的方法
+        Mod.fn.include = function(obj){
+            $.extend(this,obj);
+        };
+        //使Mod构造函数成为Controller
+        exports.Controller = Mod;
+    })(jQuery,window);
+
+    //添加控制器的原型的方法,使得新创建的实例能够拥有这个方法
+    //书上举的是unload方法,可是unload方法不兼容,所以这里随便写了一个方法,没有什么实际意义
+    Controller.fn.seeDetail = function(func){
+        jQuery('a').bind('click',this.proxy(func))
+    };
+
+    (function($,Controller){
+        //将Mod实例化
+        var mod = new Controller;
+        //为mod实例添加toggleClass方法
+        mod.toggleClass = function(e){
+            //如果e.data是true,则添加类名gray,否则删除类名gray
+            $(this).toggleClass('gray', e.data)
+        };
+        mod.load(function(){
+            this.view = $('.view');
+            //鼠标经过,将e.data设置为true,绑定mod实例的toggleClass方法
+            this.view.mouseover(true,this.toggleClass);
+            //鼠标离开,将e.data设置为false,绑定mod实例的toggleClass方法
+            this.view.mouseout(false,this.toggleClass);
+            //后添加的控制器的原型的方法,也能够访问到
+            mod.seeDetail(function(){console.log(this)});
+        });
+    })(jQuery,Controller);
+
+    //使新创建的控制器继承某个对象的方法
+    var StateMachine = {
+        sayHello:function(){
+            alert('hello world')
+        }
+    };
+
+    (function($,Controller){
+        //将Mod实例化并且继承StateMachine对象
+        var mod = new Controller(StateMachine);
+        mod.sayHello();
+    })(jQuery,Controller);
+
+
+
+</script>
+
+<div class="view" style="height:50px; width:50px">
+</div>
+
+<a>点击查看Mod实例详情</a>
+
+</body>
+</html>

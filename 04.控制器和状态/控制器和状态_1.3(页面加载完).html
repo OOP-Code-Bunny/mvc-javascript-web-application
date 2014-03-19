@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <style type="text/css">
+        *{
+            font-size:12px; font-family:'Microsoft YaHei'
+        }
+        .view {
+            background:#FFD64E
+        }
+        .view.gray {
+            background:#ccc
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+var exports = this;
+
+(function($){
+    var Mod = {};
+    Mod.create = function(includes){
+        var result = function(){
+            this.init.apply(this,arguments)
+        };
+
+        result.fn=result.prototype;
+        result.fn.proxy = function(func){return $.proxy(func,this)};
+        result.extend = function(obj){
+            $.extend(this,obj)
+        };
+        result.include = function(obj){
+            $.extend(this.fn,obj)
+        };
+        if(includes){
+            result.include(includes)
+        }
+        return result
+    };
+    exports.Controller = Mod
+})(jQuery);
+
+$(function(){
+    var viewToggleClass = Controller.create({
+        init:function(view){
+            this.view = view;
+            this.view.mouseover(true,this.proxy(this.toggleClass));
+            this.view.mouseout(false,this.proxy(this.toggleClass));
+        },
+        toggleClass:function(e){
+            this.view.toggleClass('gray', e.data)
+        }
+    });
+    new viewToggleClass($('.view'))
+})
+
+</script>
+
+<div class="view" style="height:50px; width:50px">
+</div>
+
+<a>点击查看Mod实例详情</a>
+
+</body>
+</html>

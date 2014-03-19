@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>模型</title>
+    <meta name="description" content="">
+    <meta name="author" content="code bunny">
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="spine.js"></script>
+  </head>
+  <body>
+
+  </body>
+  <script type="text/javascript">
+    var Task = Spine.Model.setup('renwu',['name','done']);
+    Task.extend({
+      done:function(){
+        alert('done')
+      }
+    });
+    Task.include({
+      name:"Empty",
+      done:false,
+      toggle:function(){
+        this.done = !this.done
+      }
+    });
+    var task = Task.init({name:"eat"});
+    //time属性不包含在setup参数中设置的属性,所以不会出现在task.attributes()里面
+    task.time = 'now';
+    console.log(task.name);
+    //task.attributes()包含setup里设置的属性,以及id
+    console.log(task.attributes());
+
+
+    /*Spine.Model.setup()方法传入两个参数,第一个参数是模型的名称,第二个参数是一个属性名组成的数组,
+    * 通过模型创建记录,还是使用init()方法,和实例化一个对象一样
+    * 通过模型创建的记录,attributes()方法得到的json对象,里面包含那个属性名数组里所有的属性及其值,以及id
+    * */
+
+   </script>
+</html>
+
+

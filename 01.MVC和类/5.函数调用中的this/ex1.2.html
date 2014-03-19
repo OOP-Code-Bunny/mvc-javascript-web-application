@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>改变绑定事件中的this指针</title>
+    <meta charset="utf-8">
+</head>
+<body>
+<input type="button" id="button" value="button"/>
+
+<script type="text/javascript">
+//使用proxy方法来改变绑定的事件中的上下文
+//这也是jquery中的proxy的原理
+var clicky = {
+   clicked:function(){alert('1')},
+   addEvent:function(){
+       //当要执行的函数作为参数被传入的时候,this指针是指向定义该函数时的环境的
+       //1.可以这样理解:this.clicked是点击以后真正要执行的方法,但是如果直接onclick = this.clicked的话,这里的this是指向button的
+         //所以,我们用一个函数把它包起来(这就是闭包),然后把this.clicked作为这个函数的参数传给这个外层的函数,由于参数是在传入的时候就已经确定的,
+         //所以作为参数时,this指针就会指向clicky.
+       document.getElementById('button').onclick = jquery.proxy(this.clicked,this)
+   }
+};
+//自己写的,并非真的jquery里就是这样写的.
+var jquery = {
+   proxy: function(fun,thisObj){
+       //返回一个完整的匿名函数
+       //2.这里之所以要返回两次,是因为,正常的绑定事件的方法应该是:onclick = function(){},应该是一个完整的匿名函数
+         //但是在20行里,我们是执行一次proxy(), 而不是 =proxy;
+         //所以,在单击事件还没有发生,而仅仅是绑定事件时,就执行了proxy,而不是等到点击了再执行,
+         //所以,proxy需要return的是一个完整的函数,而不是直接执行fun函数,
+         //如果直接执行函数,那么,还没有点击,fun函数就会被执行
+       return(function(){
+           //其实这里的 'return' 倒未必需要...直接执行fun.apply()也是正确执行的...
+           return fun.apply(thisObj,arguments);
+       })
+   }
+};
+clicky.addEvent();
+</script>
+
+</body>
+</html>
