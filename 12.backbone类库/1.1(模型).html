@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>模型</title>
+    <script src="lib/json2.js"></script>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/underscore.js"></script>
+    <script src="lib/backbone.js"></script>
+  </head>
+  <body>
+  </body>
+  <script type="text/javascript">
+    var User = Backbone.Model.extend({
+      code:'bunny'
+    },{
+      age:'1'
+    });
+    var user = new User;
+    console.log(User.prototype.code);     //得到bunny
+    console.log(User.code);               //得到undefined
+    console.log(User.age);                //得到1
+    console.log(user.code);               //得到bunny
+    console.log(user.age);                //得到undefined
+    /*Backbone.Model.extend()创建一个模型,
+    * 模型的第一个参数是模型的实例的方法和属性,实例化模型后会被继承
+    * 模型的第二个参数是模型自己的方法和属性,
+    * 实例化模型的方法是new
+    * */
+  </script>
+</html>
+
+

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>模型实例化</title>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/underscore.js"></script>
+    <script src="lib/backbone.js"></script>
+  </head>
+  <body>
+  </body>
+  <script type="text/javascript">
+    var User = Backbone.Model.extend({
+      code:'bunny',
+      initialize:function(opt){
+        this.set(opt)
+      }
+    });
+    var user = new User({job:'前端'});
+
+    console.log(user.code);                      //得到bunny
+    console.log(user.job);                       //得到undefined
+    console.log(user.get('job'));                //得到前端
+    console.log(user);
+    /*模型的实例的initialize方法,会在实例化的时候自执行
+    * 实例的set方法,传入一个json对象.
+    * 通过set方法设置的属性,必须通过.get来获取,以为它并非给实例自己设置属性,而是给实例的attributes属性添加属性
+    * 实例化的时候传入的参数必须是一个json对象,否则会报错
+    * */
+  </script>
+</html>
+
+
