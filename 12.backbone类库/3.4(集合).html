@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>集合</title>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/underscore.js"></script>
+    <script src="lib/backbone.js"></script>
+  </head>
+  <body>
+  </body>
+  <script type="text/javascript">
+    var User = Backbone.Model.extend({
+      defaults:{
+        email:'973295131@qq.com',
+        job:'web-front-end'
+      },
+      initialize:function(){
+        alert('user')
+      }
+    });
+    var Users = Backbone.Collection.extend({
+      model:User
+    });
+
+    var user = new Users();
+    user.bind('remove',function(user){
+      alert(user.get('name')+'已被删除')
+    });
+    user.add([{name:'codebunny'},{name:'whitebunny'}]);
+    user.remove(user.models[0]);
+    console.log(user);
+
+
+    /*
+    * 使用remove方法为集合删除数据,传入的参数就是要被删除的数据:
+    * 同样,remove事件触发的时候,也会触发相应的回调.
+    * 回调函数可以自定义,其中传入的参数就是被删除掉的数据
+    * */
+
+   </script>
+</html>
+
+

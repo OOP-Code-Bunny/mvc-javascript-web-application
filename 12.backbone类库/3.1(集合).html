@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>集合</title>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/underscore.js"></script>
+    <script src="lib/backbone.js"></script>
+  </head>
+  <body>
+  </body>
+  <script type="text/javascript">
+    var User = Backbone.Model.extend({
+      defaults:{
+        email:'973295131@qq.com',
+        job:'web-front-end'
+      },
+      initialize:function(){
+        alert('user')
+      }
+    });
+    var Users = Backbone.Collection.extend({
+      model:User
+    });
+
+    var user = new Users([{name:'codebunny'},{name:'whitebunny'}]);
+
+    console.log(user);
+
+    var Col = Backbone.Collection.extend();
+    var col = new Col([{name:'codebunny'},{name:'whitebunny'}]);
+
+    console.log(col);
+
+    /*
+    * 集合就是存放模型的数组,(至少这里的模型是单条数据,和spine的模型不是一个概念),所以,集合可以理解为数据的集合
+    * 使用Backbone.Collection.extend()来创建一个集合的类,注意是集合的类,还需要实例化才能获得集合
+    * 将集合实例化的方法就是new ...
+    * 实例化集合的时候可以传入数据,注意,数据是一个数组
+    * 如果在创建集合的类的时候传入了model参数,那么,实例化集合的时候,集合的每条数据相当于都是从这个model实例化得到的数据,然后再根据传入的参数各自定义自己的属性
+    * 比如这个例子中,Users集合类添加了参数model:User,那么,user集合中的两条数据的attribute属性中都会有email和job属性,另外再拥有各自的name属性,并且都会自执行initialize回调
+    * 但是Col集合类没有添加任何参数,那么col集合中的两条数据就只有各自的name属性
+    * */
+
+   </script>
+</html>
+
+

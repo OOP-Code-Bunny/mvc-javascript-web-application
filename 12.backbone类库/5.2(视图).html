@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>视图</title>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/underscore.js"></script>
+    <script src="lib/backbone.js"></script>
+  </head>
+  <body>
+  </body>
+  <script type="text/javascript">
+
+    var UserView = Backbone.View.extend({
+      initialize:function(){
+        this.render()
+      },
+      render:function(){
+        $(this.el).html('hello world');
+        $('body').append($(this.el));
+      },
+      tagName:'span',
+      className:'user',
+      id:'user'
+    });
+
+    var user = new UserView;
+
+    console.log(user.el);
+
+
+    /*
+    * 在创建视图类的时候定义tagName属性,className属性,id属性,
+    * 实例化以后的视图模型的el属性就是一个新建的元素,它的标签就是tagName属性值,类名就是className属性值,id就是id属性值
+    * 视图模型的el属性这个dom元素,通过$()以后,就可以和普通的jquery对象一样操作
+    * 传入的render方法是自定义的渲染视图的方法,默认是空
+    * el属性获取一个dom元素,也可以自己创建,详见下一篇
+    * */
+
+   </script>
+</html>
+
+

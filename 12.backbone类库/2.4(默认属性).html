@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>默认属性</title>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/underscore.js"></script>
+    <script src="lib/backbone.js"></script>
+  </head>
+  <body>
+  </body>
+  <script type="text/javascript">
+    var User = Backbone.Model.extend({
+      defaults:{
+        name:'code_bunny',
+        email:'973295131'
+      },
+      validate:function(atts){
+        if(atts.email && atts.email.length<20){
+          return "email的长度不能小于20个字节"
+        }
+      }
+    });
+    var user = new User();
+
+    console.log(user.get('name'));
+    console.log(user.get('email'));
+
+    /*
+    * 模型的defaults属性,是一个json对象,里面是模型的实例的attributes默认具有的属性或方法,实例化以后即可拥有
+    * 默认的属性不受到validate的影响
+    * */
+
+   </script>
+</html>
+
+

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>视图</title>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/underscore.js"></script>
+    <script src="lib/backbone.js"></script>
+  </head>
+  <body>
+    <div>
+      <input type="text"/>
+      <button>清空</button>
+    </div>
+  </body>
+  <script type="text/javascript">
+
+    var UserView = Backbone.View.extend({
+      el:$('div'),
+      events:{
+        'change input':'show',
+        'click button':'clear'
+      },
+      show:function(e){
+        console.log($(e.target).val())
+      },
+      clear:function(e){
+        this.el.find('input').val('')
+      }
+    });
+
+    var user = new UserView;
+
+
+
+
+
+    /*
+    * Backbone.View.extend()中参数的events属性传入一个用于绑定事件的json对象
+    * 格式是 '事件名 元素':'回调函数的名字'
+    * 其中,元素 是在实例的el里寻找,然后给这个元素委托事件,和spine.js差不多
+    * 这里委托事件的回调会自动把this指针指向实例比如,这里的this指向就是试图的实例user
+    * */
+
+   </script>
+</html>
+
+

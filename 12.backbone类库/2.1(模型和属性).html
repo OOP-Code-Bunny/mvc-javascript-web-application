@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>模型和属性</title>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/underscore.js"></script>
+    <script src="lib/backbone.js"></script>
+  </head>
+  <body>
+  </body>
+  <script type="text/javascript">
+    var User = Backbone.Model.extend();
+    var user = new User();
+
+    user.set({name:'codebunny',job:'web-front-end'});
+
+    console.log(user.get('name'));                //得到codebunny
+    console.log(user.attributes);                 //得到通过set设置的相关属性
+
+    $("body").text(JSON.stringify(user.toJSON()));
+
+    /*
+    * 实例的set方法,传入一个json对象.
+    * 通过set方法设置的属性,必须通过.get来获取,get方法中传入的参数必须是一个字符串,它并非给实例自己设置属性,而是给实例的attributes属性添加属性
+    * */
+  </script>
+</html>
+
+

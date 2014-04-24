@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>集合</title>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/underscore.js"></script>
+    <script src="lib/backbone.js"></script>
+  </head>
+  <body>
+  </body>
+  <script type="text/javascript">
+    var User = Backbone.Model.extend({
+      defaults:{
+        email:'973295131@qq.com',
+        job:'web-front-end'
+      }
+    });
+    var Users = Backbone.Collection.extend({
+      model:User
+    });
+
+    var user = new Users();
+
+    user.add([{name:'codebunny'},{name:'whitebunny'}]);
+
+    var user_1 = user.getByCid('c0');
+    var user_2 = user.getByCid('c1');
+    console.log(user_1.get('name'));
+    console.log(user_2.get('name'));
+    console.log(user);
+
+
+    /*
+    * 数据在被创建的时候,会自动创建一个cid属性,是该记录唯一的标识
+    * 第一条记录的cid值就是c0,第二个就是c1...
+    * 可以通过getByCid方法来获取数据,传入的参数就是数据的cid值
+    * */
+
+   </script>
+</html>
+
+

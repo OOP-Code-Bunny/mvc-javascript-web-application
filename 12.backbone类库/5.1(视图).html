@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>视图</title>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/underscore.js"></script>
+    <script src="lib/backbone.js"></script>
+  </head>
+  <body>
+  </body>
+  <script type="text/javascript">
+
+    var UserView = Backbone.View.extend({
+      initialize:function(){
+        this.render()
+      },
+      render:function(){
+        this.el.html('hello world')
+      },
+      el:$('body')
+    });
+
+    var user = new UserView;
+
+    console.log(user.el);
+
+
+
+    /*
+    * 使用Backbone.View.extend()可以创建一个视图类,
+    * 传入的参数的initialize方法在实例化的时候会自执行
+    * 传入的render方法是自定义的渲染视图的方法,默认是空
+    * el属性获取一个dom元素,也可以自己创建,详见下一篇
+    * */
+
+   </script>
+</html>
+
+

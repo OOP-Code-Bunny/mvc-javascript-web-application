@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>模型和属性</title>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/underscore.js"></script>
+    <script src="lib/backbone.js"></script>
+  </head>
+  <body>
+  </body>
+  <script type="text/javascript">
+    var User = Backbone.Model.extend({
+      validate:function(atts){
+        if(atts.email && atts.email.length<3){
+          return "email的长度不能小于3个字节"
+        }
+        if(atts.age && atts.age<3){
+          return "年龄不得小于3"
+        }
+      }
+    });
+    var user = new User();
+
+    user.bind('error',function(model,error){
+      console.log(model);
+      console.log(error)
+    });
+
+    user.set({name:'codebunny'});
+
+    user.set({email:'12'});
+
+    user.set({age:'2'});
+
+    user.set({email:'973295131@qq.com'});
+
+    console.log(user.get('email'));
+
+    /*
+    * 模型的validate方法,传入一个参数atts,atts就是实例的attributes属性
+    * 函数里自己来定义检验的规则.返回一个提示错误信息的字符串
+    * 为实例绑定error事件,回调函数中有两个参数,第一个参数就是实例本身,第二个参数就是validate函数中返回的错误信息.
+    * 当检验没有通过时,就会触发error事件回调
+    * */
+
+   </script>
+</html>
+
+

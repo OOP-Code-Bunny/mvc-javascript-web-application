@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>视图</title>
+    <script src="../lib/jquery.js"></script>
+    <script src="../lib/underscore.js"></script>
+    <script src="../lib/backbone.js"></script>
+    <script type="text/javascript" charset="utf-8" src="arttemplate/build/template.js"></script>
+    <style type="text/css">
+      p {
+        font-family: 'MICROSOFT YAHEI'; color:#ccc; font-size:12px
+      }
+      p span {
+        color:#00b78e
+      }
+      p.title {
+        font-size:14px; color:#00b78e
+      }
+    </style>
+  </head>
+  <body>
+  </body>
+  <script type="text/javascript">
+
+    var User = Backbone.Model;
+
+    var data1 = new User({name:'codebunny',id:'001',thing:'eating'});
+    var data2 = new User({name:'whitebunny',id:'002',thing:'sleeping'});
+
+    var Users = Backbone.Collection.extend({
+      arrayToJSON: function(){
+        var newArr=[];
+        $.each(this.models,function(index,data){
+          newArr.push(data.toJSON());
+        });
+        return newArr;
+      }
+    });
+    var users = new Users;
+
+    users.add([data1,data2]);
+
+    var UserView = Backbone.View.extend({
+      initialize:function(){
+        _.bindAll(this,'render','remove');
+        this.model.bind('add',this.render);
+        this.model.bind('remove',this.remove);
+        this.render()
+      },
+      template:function(modules){
+        return (template('tmpl-loading',modules))
+      },
+      render:function(){
+        //users.models中的记录,属性都在记录的attributes里,所以模板引擎无法读到,需要自己写一个方法,将每条数据都转换成标准json格式,然后再放到一个数组里
+        $(this.el).html(this.template(this.model.arrayToJSON()));
+        $('body').append($(this.el));
+      },
+      remove:function(data){
+        $(this.el).find('#'+data.id).remove()
+      },
+      tagName:'div',
+      className:'user',
+      id:'user'
+    });
+
+    var user = new UserView({model:users});
+
+    users.add([{name:'blackbunny',id:'003',thing:'writing'}]);
+
+    setTimeout(function(){
+      users.remove(data1);
+    },2000);
+
+
+
+    /*
+    * 1.绑定上下文:
+    *   _.bindAll(obj,'函数名1','函数名2',...)
+    *   这是underscore的方法,意思就是把函数名1,函数名2...这些函数的上下文都绑定到第一个传入的参数obj上.
+    *   比如,这里给视图的model集合绑定change事件执行render回调,remove事件执行remove回调,
+    *   如果不通过_.bindAll绑定这两个回调的上下文都是this(也就是视图的实例),那么,执行rende和remove的时候,他们的this上下文是指向model的
+    * 2.通过绑定事件回调,使数据和视图同步
+    *   比如,这里如果给模型添加数据,则触发render回调,重新渲染视图,如果是给模型移除数据,则触发remove回调,删除视图上对应的数据
+    * */
+
+   </script>
+</html>
+
+

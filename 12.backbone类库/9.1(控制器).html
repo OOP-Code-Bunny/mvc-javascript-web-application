@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>控制器1</title>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/underscore.js"></script>
+    <script src="lib/backbone.js"></script>
+  </head>
+  <body>
+
+  </body>
+  <script type="text/javascript">
+
+    var AppRouter = Backbone.Controller.extend({
+      routes: {
+        "!/index" : "index",
+        "!/task/:id": "taskId",
+        "!/task/:id/p:page": "taskIdPage",
+        "!/task/*any": "taskAll"
+      },
+      index: function() {
+        console.log('进入首页');
+      },
+      taskIdPage: function(id,page) {
+        console.log('任务id为'+id);
+        console.log('任务的当前页码为'+page);
+      },
+      taskId: function(id) {
+        console.log('任务id为'+id);
+      },
+      taskAll: function(any){
+        console.log('匹配task,后面的内容为'+any)
+      }
+    });
+
+    var app = new AppRouter;
+    Backbone.history.start();
+
+
+    /*
+    * Backbone.Controller.extend()中参数的routes属性传入一个用于匹配路由的json对象
+    * 匹配方式:没有任何符号:完全匹配
+    * 冒号(:):这一段随意匹配,内容会作为参数
+    * 星号(*):所有的内容随意匹配,内容会作为参数
+    * :和*的区别:':'匹配的内容到下一个/结束,下一个/后面的再次进入匹配,但是'*'匹配的内容包括后面的所有内容,无论是否包含'/'
+    * ':'和'*'之前的内容,还是作为完全的内容匹配,比如这里的p:page,因此,这一段的内容必须是p开头的,才会被匹配到,而且,匹配的是p后面的内容,作为参数
+    * 当一段url匹配多条路由时,按照routes里出现的顺序,越前面的,优先级越高,所以,越是通用的匹配,应该越是放在后面
+    * 下面解释这个例子的匹配规则:
+    * url后面的部分为!/index: 触发index回调,不传入参数
+    * url后面的部分为!/task/任何内容(包含/): 触发taskAll回调,传入参数就是'任何内容'
+    * url后面的部分为!/task/任何内容(不包含/): 触发taskId回调,传入的参数就是'任何内容'
+    * url后面的部分为!/task/任何内容1(不包含/)/p任何内容2: 触发taskIdPage回调,传入的参数就是'任何内容'和'任何内容2'
+    * 注意,最后一定要使用Backbone.history.start()开启,而且一定要是所有路由都配置完之后
+    * * 新版的backbone里,Controller更名为Router
+    * */
+
+   </script>
+</html>
+
+

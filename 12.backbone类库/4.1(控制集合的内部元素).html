@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>控制集合的内部顺序</title>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/underscore.js"></script>
+    <script src="lib/backbone.js"></script>
+  </head>
+  <body>
+  </body>
+  <script type="text/javascript">
+
+    var User = Backbone.Model;
+
+    var Users = Backbone.Collection.extend({
+      comparator:function(rec){
+        return rec.get('name')
+      }
+    });
+
+    var users = new Users;
+
+    var user_1 = new User;
+
+    users.add([user_1]);
+
+    user_1.set({name:'codebunny'});
+
+    var user_2 = new User;
+
+    users.add([user_2]);
+
+    user_2.set({name:'acodebunny'});
+
+    $('body').text(JSON.stringify(users.toJSON()));
+
+
+    /*
+    * 在创建集合类的时候,传入comparator函数函数,其实的参数就是集合的每条数据,返回值可以是数字,也可以是字符串
+    * 集合会根据返回值来进行排序,比如这个例子中,返回数据的name属性,就会根据name属性值进行排序,排序方式就是name属性值的第一个字的unicode码位
+    * 可以看到,虽然acodebunny是后添加的数据,但是它在集合中是排在前面的
+    * */
+
+   </script>
+</html>
+
+

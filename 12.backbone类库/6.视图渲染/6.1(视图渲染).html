@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>视图</title>
+    <script src="../lib/jquery.js"></script>
+    <script src="../lib/underscore.js"></script>
+    <script src="../lib/backbone.js"></script>
+    <script type="text/javascript" charset="utf-8" src="arttemplate/build/template.js"></script>
+    <style type="text/css">
+      p {
+        font-family: 'MICROSOFT YAHEI'; color:#ccc; font-size:12px
+      }
+      p span {
+        color:#00b78e
+      }
+      p.title {
+        font-size:14px; color:#00b78e
+      }
+    </style>
+  </head>
+  <body>
+  </body>
+  <script type="text/javascript">
+
+    var User = Backbone.Model;
+
+    var data1 = new User({name:'codebunny',id:'001',thing:'eating'});
+    var data2 = new User({name:'whitebunny',id:'002',thing:'sleeping'});
+
+    var Users = Backbone.Collection.extend({
+      arrayToJSON: function(){
+        var newArr=[];
+        $.each(this.models,function(index,data){
+          newArr.push(data.toJSON());
+        });
+        return newArr;
+      }
+    });
+    var users = new Users;
+
+    users.add([data1,data2]);
+
+    var UserView = Backbone.View.extend({
+      initialize:function(){
+        this.render()
+      },
+      template:function(modules){
+        return (template('tmpl-loading',modules))
+      },
+      render:function(){
+        //users.models中的记录,属性都在记录的attributes里,所以模板引擎无法读到,需要自己写一个方法,将每条数据都转换成标准json格式,然后再放到一个数组里
+        $(this.el).html(this.template(this.model.arrayToJSON()));
+        $('body').append($(this.el));
+      },
+      tagName:'div',
+      className:'user',
+      id:'user'
+    });
+
+    var user = new UserView({model:users});
+
+
+
+    /*
+    * 1.创建一个模型类,
+    * 2.通过模型类实例化出两条数据
+    * 3.创建一个集合类,
+    * 4.通过集合类实例化出一个集合
+    * 5.将数据添加到集合里
+    * 6.创建一个视图类
+    *   6.1 添加template方法,参数表示渲染模板所用的数据
+    *   6.2 render方法把渲染后的内容插入到视图实例的el元素中,再插入到body中
+    *   6.3 定义视图类实例化以后的实例的el属性的dom元素的tagName,className,id
+    * 7.实例化视图类,传入model属性,属性值就是和视图中的数据相关联的集合,这个很关键,后面都会用到
+    * 8.在通过model属性进行渲染视图的时候,需要把集合通过自定义的arrayToJSON方法得到的数据的标准json格式,最后得到相应的视图
+    * */
+
+   </script>
+</html>
+
+

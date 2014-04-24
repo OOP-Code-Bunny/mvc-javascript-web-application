@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>集合</title>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/underscore.js"></script>
+    <script src="lib/backbone.js"></script>
+  </head>
+  <body>
+  </body>
+  <script type="text/javascript">
+    var User = Backbone.Model.extend({
+      defaults:{
+        email:'973295131@qq.com',
+        job:'web-front-end'
+      }
+    });
+    var data = new User;
+
+    var user = new Backbone.Collection;
+
+    user.bind('change',function(rec){
+      console.log(rec.get('name'))
+    });
+
+    user.add([data]);
+
+    data.set({name:'codebunny'});
+
+
+
+
+    /*
+    * 当集合中的数据被修改后,会触发change事件,
+    * 可以自定义change回调,其中传入的参数就是改变的数据
+    * */
+
+   </script>
+</html>
+
+

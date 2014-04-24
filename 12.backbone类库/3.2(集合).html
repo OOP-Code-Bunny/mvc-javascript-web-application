@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>集合</title>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/underscore.js"></script>
+    <script src="lib/backbone.js"></script>
+  </head>
+  <body>
+  </body>
+  <script type="text/javascript">
+    var User = Backbone.Model.extend({
+      defaults:{
+        email:'973295131@qq.com',
+        job:'web-front-end'
+      },
+      initialize:function(){
+        alert('user')
+      }
+    });
+    var Users = Backbone.Collection.extend({
+      model:User
+    });
+
+    var user = new Users();
+    user.bind('add',function(user){
+      alert('这条记录的name为'+user.get('name'))
+    });
+    user.add([{name:'codebunny'},{name:'whitebunny'}]);
+
+    console.log(user);
+
+
+    /*
+    * 为集合添加数据也可以通过add方法:
+    * 得到的结果和实例化的时候就传入数据是一致的
+    * 但是在add的时候会触发相应的回调,回调函数可以自定义,其中传入的参数就是添加的数据本身
+    * */
+
+   </script>
+</html>
+
+

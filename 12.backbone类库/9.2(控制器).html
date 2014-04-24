@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>控制器2</title>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/underscore.js"></script>
+    <script src="lib/backbone.js"></script>
+  </head>
+  <body>
+
+  </body>
+  <script type="text/javascript">
+
+    var AppRouter = Backbone.Controller.extend({
+      initialize:function(){
+        this.route('!/index','index',function(){
+          console.log('匹配index的回调')
+        });
+        this.route('!/task/*any','taskAll',function(any){
+          console.log('匹配task+任意的回调,传入的参数是'+any)
+        });
+        this.route('!/task/:id','taskId',function(id){
+          console.log('匹配task+一个id值的回调,传入的参数是'+id)
+        });
+        this.route('!/task/:id/p:page','taskIdPage',function(id,page){
+          console.log('匹配task+一个id值+p+页码的回调,传入的参数是'+id+'和'+page)
+        });
+      }
+    });
+
+    var app = new AppRouter;
+
+    app.bind("route:index", function() {
+      console.log('进入首页');
+    });
+
+    app.bind("route:taskIdPage", function(id,page) {
+      console.log('任务id为'+id);
+      console.log('任务的当前页码为'+page);
+    });
+
+    app.bind("route:taskId", function(id) {
+      console.log('任务id为'+id);
+    });
+
+    app.bind("route:taskAll", function(any) {
+      console.log('匹配task,后面的内容为'+any)
+    });
+
+
+    Backbone.history.start();
+
+
+    /*
+    * 这里给到了另外一种匹配路由的方式:
+    * 在路由的类中写入initialize方法
+    * 设置this.route(),
+    * 其中第一个参数是匹配规则,普通的规则就是9.1里面的routes属性的属性
+    * 也可以是一个正则(怎么用不会,到时候查资料)
+    * 其中第二个参数是触发的回调,这里触发的回调是在实例化以后定义的:
+    * 也就是这里的app.bind('route:name',function(){})中route:后面的名字,传入的参数和9.1里一样
+    * 第三个参数也是触发的回调,注意,不能不写,如果没有,也要写一个空的函数,传入的参数和9.1里的一样
+    * 最后,这两个回调触发的顺序,是先触发在initialize里定义的回调,再触发实例里绑定的回调
+    * */
+
+   </script>
+</html>
+
+

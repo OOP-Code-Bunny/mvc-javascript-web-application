@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>模型和属性</title>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/underscore.js"></script>
+    <script src="lib/backbone.js"></script>
+  </head>
+  <body>
+  </body>
+  <script type="text/javascript">
+    var User = Backbone.Model.extend({
+      validate:function(atts){
+        if(atts.email && atts.email.length<20){
+          return "email的长度不能小于20个字节"
+        }
+        if(atts.age && atts.age<3){
+          return "年龄不得小于3"
+        }
+      }
+    });
+    var user = new User();
+
+    user.set({name:'codebunny'});
+
+    user.set({age:'2'});
+
+    user.set({email:'973295131'},{error:function(model,error){
+      console.log(model);
+      console.log(error);
+    }});
+
+    console.log(user.get('age'));
+    console.log(user.get('name'));
+
+    /*
+    * 模型的validate方法,传入一个参数atts,atts就是实例的attributes属性
+    * 函数里自己来定义检验的规则.返回一个提示错误信息的字符串
+    * 可以在set属性时,传入第二个参数,第二个参数中的error属性,就是当不通过检验时调用的回调
+    * 这和2.2里面的绑定error回调的区别在于,它的回调只针对当前的set的属性,
+    * 但是,其余的set也会进行检验,但检验出错后,不会触发error回调.
+    * 比如这里的set({age:'2'}),其实设置是失败的,是不通过检验的,会得到undefined,但是不会触发任何回调,仅仅是设置失败.
+    * */
+
+   </script>
+</html>
+
+
