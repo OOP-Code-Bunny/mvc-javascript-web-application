@@ -30,7 +30,6 @@ var jquery = {
          //所以,proxy需要return的是一个完整的函数,而不是直接执行fun函数,
          //如果直接执行函数,那么,还没有点击,fun函数就会被执行
        return(function(){
-           //其实这里的 'return' 倒未必需要...直接执行fun.apply()也是正确执行的...
            return fun.apply(thisObj,arguments);
        })
    }
