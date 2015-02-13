@@ -121,7 +121,8 @@ model1.save();
 var model2 = model.createProto({name:'model2'});
 model2.save();
 model2.destroy();
-console.log(model.find('model2'));
+console.log(model.find(model2.id));          //没有找到,model2已经被删除
+console.log(model.find(model1.id));          //获取model1
 console.log(model.records);
 console.log(Model.records);
 </script>
